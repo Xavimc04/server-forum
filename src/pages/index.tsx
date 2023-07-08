@@ -32,8 +32,18 @@ export default function Home({ user }:{ user: SteamProfile }) {
                     </button>
                 </div>
 
+                <div className="absolute hidden lg:flex inset-0 items-center justify-center">
+                    <div className="w-1/2 h-1/2 transform skew-y-12 z-0 bg-slate-900 rounded-lg"></div>
+                </div>
+
                 <img draggable={ false } className="z-0 static lg:absolute h-auto xl:h-screen mt-20 lg:mt-0 right-0" src='https://media-rockstargames-com.akamaized.net/tina-uploads/tina-modules/a19a/c4aaed728a0ede830dca12d8d17ae95262b9c4fa.png' />
+                <div className="absolute bottom-0 w-full bg-gradient-to-t from-slate-950 to-transparent h-[200px]"></div>
             </section> 
+
+
+            <div>
+                awdawdawdad
+            </div>
         </Layout>
     </AuthContext.Provider>
 }
