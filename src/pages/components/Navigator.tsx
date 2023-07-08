@@ -1,8 +1,10 @@
 import { SteamProfile } from "@/lib/passport";
 import { AuthContext } from "@/providers/Auth.context"
 import { useContext, useState } from "react"
+import { useRouter } from "next/router";
 
 export default function Navigator() {
+    const router = useRouter(); 
     const { user }: SteamProfile | any = useContext(AuthContext); 
     const [display, handleDisplay] = useState<boolean>(false) 
 
@@ -14,9 +16,9 @@ export default function Navigator() {
                 <img className="h-10" src="https://media.discordapp.net/attachments/1126239023866843237/1126240535921840138/1.2.PNG?width=959&height=670" alt="Luck-Community-Logo" />
 
                 <ul className="flex poppins items-center gap-6 ml-10 select-none">
-                    <li className="cursor-pointer transition-all hover:text-violet-500">Inicio</li>
+                    <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/')}>Inicio</li>
                     <li className="cursor-pointer transition-all hover:text-violet-500">Tienda</li>
-                    <li className="cursor-pointer transition-all hover:text-violet-500">Contacto</li>
+                    <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/forum')}>Foro</li>
                     <li className="cursor-pointer transition-all hover:text-violet-500">Whitelist</li>
                 </ul>
             </div>
@@ -34,9 +36,9 @@ export default function Navigator() {
 
         {
             display && <ul className="flex md:hidden bg-slate-950 flex-col poppins px-5 mt-10 items-center gap-6 select-none pb-10">
-                <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Inicio</li>
+                <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/')}>Inicio</li>
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Tienda</li>
-                <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Contacto</li>
+                <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/forum')}>Foro</li>
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Whitelist</li>
             </ul>
         }

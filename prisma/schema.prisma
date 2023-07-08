@@ -1,0 +1,29 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model users {
+    identifier  String   @id @db.VarChar(46)
+    steam       String?  @db.VarChar(100)
+    accounts    String?  @db.LongText
+    rank        Int      @default(0)
+    group       String?  @default("user") @db.VarChar(50)
+    inventory   String?  @db.LongText
+    job         String?  @default("unemployed") @db.VarChar(20)
+    job_grade   Int?     @default(0)
+    loadout     String?  @db.LongText
+    metadata    String?  @db.LongText
+    position    String?  @db.LongText
+    firstname   String?  @db.VarChar(16)
+    lastname    String?  @db.VarChar(16)
+    dateofbirth String?  @db.VarChar(10)
+    sex         String?  @db.VarChar(1)
+    height      Int?
+    disabled    Boolean? @default(false)
+    skin        String?  @db.LongText
+}

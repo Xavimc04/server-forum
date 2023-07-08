@@ -1,9 +1,7 @@
-import Navigator from './components/Navigator'
 import Layout from './layout'  
 import { useRouter } from 'next/router'
 import router from "../lib/router";
 import { NextApiResponse } from "next";
-
 import { SteamProfile } from "@/lib/passport";
 import type { NextSteamAuthApiRequest } from "../lib/router";
 import { AuthContext } from '@/providers/Auth.context';
@@ -13,9 +11,7 @@ export default function Home({ user }:{ user: SteamProfile }) {
     const NextRouter = useRouter(); 
 
     return <AuthContext.Provider value={{ user }}>
-        <Layout>
-            <Navigator  /> 
-            
+        <Layout>  
             <section className="h-auto lg:h-screen w-screen relative flex flex-col justify-center items-center lg:items-start"> 
                 <div className='w-[60%] lg:w-1/4 mt-20 lg:mt-0 lg:ml-20 z-20' style={{
                     textShadow: '0px 0px 10px black'

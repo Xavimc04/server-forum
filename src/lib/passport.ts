@@ -4,6 +4,7 @@ import passportSteam from "passport-steam";
 const SteamStrategy = passportSteam.Strategy;
 
 export interface SteamProfile {
+    _json: any,
     displayName: string,
     id: string,
     identifier: string,
