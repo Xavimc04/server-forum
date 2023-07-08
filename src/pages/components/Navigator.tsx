@@ -1,7 +1,12 @@
-import { useState } from "react"
+import { SteamProfile } from "@/lib/passport";
+import { AuthContext } from "@/providers/Auth.context"
+import { useContext, useState } from "react"
 
 export default function Navigator() {
+    const { user }: SteamProfile | any = useContext(AuthContext); 
     const [display, handleDisplay] = useState<boolean>(false)
+
+    console.log(user); 
 
     return <div className="sticky top-0 w-full z-40">
         <div className="flex items-center justify-between p-5 bg-gradient-to-b from-black to-transparent z-30">
@@ -18,9 +23,15 @@ export default function Navigator() {
                 </ul>
             </div>
 
-            <button className="transition-all border border-violet-500 py-3 px-8 text-violet-500 rounded poppins hover:shadow hover:shadow-violet-500 hover:bg-violet-500 hover:text-slate-900" style={{
-                whiteSpace: "nowrap"
-            }}>Iniciar sesión</button>
+            {
+                user && user.displayName ? <div className="flex items-center select-none">
+                    { user.displayName }
+
+                    <img className="h-11 cursor-pointer rounded-full ml-5" src={ user.photos[1].value } alt="Profile" />
+                </div> : <button className="transition-all border border-violet-500 py-3 px-8 text-violet-500 rounded poppins hover:shadow hover:shadow-violet-500 hover:bg-violet-500 hover:text-slate-900" style={{
+                    whiteSpace: "nowrap"
+                }}>Iniciar sesión</button>
+            }
         </div>
 
         {
