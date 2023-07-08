@@ -8,9 +8,11 @@ import { useEffect, useState } from "react";
 import { users } from "@prisma/client";
 import { getUser } from "@/services/userService";
 import Spinner from "../components/Spinner";
+import Categories from "../components/forum/Categories";
 
 export default function Index({ user }:{ user: SteamProfile }) { 
     const [player, handlePlayer] = useState<users>();
+    const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,6 +21,8 @@ export default function Index({ user }:{ user: SteamProfile }) {
             if(response.user) {
                 handlePlayer(response.user); 
             }
+
+            handlePlayerLoaded(true); 
         }
 
         fetchData();
@@ -26,9 +30,13 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
     return <>
         {
-            player ? <AuthContext.Provider value={{ user, player }}>
+            playerLoaded ? <AuthContext.Provider value={{ user, player }}>
                 <Layout>
-                    Holaa estamos en el foro { user.displayName }
+                    <main className="flex justify-center mt-20">  
+                        <Categories />
+
+                        <div className="bg-slate-900 w-[900px] rounded-lg"></div>
+                    </main>
                 </Layout>
             </AuthContext.Provider> : <Spinner />
         }

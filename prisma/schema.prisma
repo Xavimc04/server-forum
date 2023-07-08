@@ -27,3 +27,11 @@ model users {
     disabled    Boolean? @default(false)
     skin        String?  @db.LongText
 }
+
+model ForumCategory {
+    id         Int       @id @default(autoincrement())
+    name       String
+    parentId   Int?
+
+    @@map(name: "forum_categories")
+}
