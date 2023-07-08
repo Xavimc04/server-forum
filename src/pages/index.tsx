@@ -7,6 +7,7 @@ import { NextApiResponse } from "next";
 import { SteamProfile } from "@/lib/passport";
 import type { NextSteamAuthApiRequest } from "../lib/router";
 import { AuthContext } from '@/providers/Auth.context';
+import Footer from './components/Footer';
 
 export default function Home({ user }:{ user: SteamProfile }) { 
     const NextRouter = useRouter(); 
@@ -41,9 +42,7 @@ export default function Home({ user }:{ user: SteamProfile }) {
             </section> 
 
 
-            <div>
-                awdawdawdad
-            </div>
+            <Footer />
         </Layout>
     </AuthContext.Provider>
 }

@@ -4,9 +4,7 @@ import { useContext, useState } from "react"
 
 export default function Navigator() {
     const { user }: SteamProfile | any = useContext(AuthContext); 
-    const [display, handleDisplay] = useState<boolean>(false)
-
-    console.log(user); 
+    const [display, handleDisplay] = useState<boolean>(false) 
 
     return <div className="sticky top-0 w-full z-40">
         <div className="flex items-center justify-between p-5 bg-gradient-to-b from-black to-transparent z-30">
