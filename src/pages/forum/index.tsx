@@ -20,12 +20,15 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await getUser(user._json.steamid); 
-            const categoriesRequest = await getCategories(); 
+            if(user) {
+                const response = await getUser(user._json.steamid); 
 
-            if(response.user) {
-                handlePlayer(response.user); 
+                if(response.user) {
+                    handlePlayer(response.user); 
+                }
             }
+
+            const categoriesRequest = await getCategories(); 
 
             if(categoriesRequest) {
                 setCategories(categoriesRequest); 
