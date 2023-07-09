@@ -9,10 +9,12 @@ import { users } from "@prisma/client";
 import { getUser } from "@/services/userService";
 import Spinner from "../components/Spinner";
 import Categories from "../components/forum/Categories";
+import CategoryModal from "../components/forum/CategoryModal";
 
 export default function Index({ user }:{ user: SteamProfile }) { 
     const [player, handlePlayer] = useState<users>();
     const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
+    const [creatingCategory, setCreatingCategory] = useState<boolean>(true); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,11 +34,21 @@ export default function Index({ user }:{ user: SteamProfile }) {
         {
             playerLoaded ? <AuthContext.Provider value={{ user, player }}>
                 <Layout>
-                    <main className="flex justify-center mt-20">  
+                    <main className="flex flex-wrap mt-20">
+                        <div className="w-full mb-10 mx-20 flex items-center justify-end gap-7">
+                            {
+                                player && player.rank != 0 && <button onClick={() => setCreatingCategory(true)} className="px-10 border border-green-500 py-3 rounded-lg text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">Nueva categoría</button>
+                            }
+
+                            <button className="px-10 border border-violet-500 py-3 rounded-lg text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">Nuevo post</button>
+                        </div>
+
                         <Categories />
 
-                        <div className="bg-slate-900 w-[900px] rounded-lg"></div>
+                        <div className="bg-slate-900 flex-1 rounded-lg mr-20"></div>
                     </main>
+
+                    <CategoryModal isVisible={ creatingCategory } closeModal={ setCreatingCategory } />
                 </Layout>
             </AuthContext.Provider> : <Spinner />
         }

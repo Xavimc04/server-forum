@@ -1,12 +1,11 @@
-import { AuthContext } from "@/providers/Auth.context"
 import { getCategories } from "@/services/forumService";
-import { ForumCategory, users } from "@prisma/client";
-import { useContext } from "react"
+import { ForumCategory } from "@prisma/client"; 
 import { useEffect, useState } from "react";
+import Spinner from "../Spinner";
 
-export default function Categories() {
-    const { player }: users | any = useContext(AuthContext);
+export default function Categories() { 
     const [categories, setCategories] = useState<ForumCategory[]>(); 
+    const [isLoading, handleLoading] = useState<boolean>(true); 
     const [categoryRoute, handleCategoryRoute] = useState<any>([]); 
 
     useEffect(() => {
@@ -16,16 +15,18 @@ export default function Categories() {
             if(response) {
                 setCategories(response); 
             } 
+
+            handleLoading(false);
         }
 
         fetchData();
     }, [])
 
-    return <div className="mr-20 min-w-[300px] max-w-[500px] flex flex-col gap-5">
-        {
-            player && player.rank != 0 && <button className="w-auto border border-violet-500 py-3 rounded-lg text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">Nueva categoría</button>
-        }
+    if(isLoading) {
+        return <Spinner />
+    }
 
+    return <div className="mx-20 min-w-[300px] max-w-[500px] flex flex-col gap-5">
         <div className="flex items-center mb-5 opacity-60 select-none cursor-pointer">
                 <span onClick={() => handleCategoryRoute([])}>Inicio /</span>
 

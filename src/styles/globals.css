@@ -11,6 +11,10 @@
     scrollbar-width: none;  
 }
 
+input:focus {
+    outline: transparent;
+}
+
 .poppins {
     font-family: poppins;
 } 
