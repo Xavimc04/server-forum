@@ -1,10 +1,26 @@
 import { ForumCategory } from "@prisma/client"; 
 import { useContext, useState } from "react"; 
 import { AuthContext } from "@/providers/Auth.context";
+import ContextMenu, { ContextCoords } from "./ContextMenu";
 
 export default function Categories() {  
     const { categories } : any = useContext(AuthContext);  
     const [categoryRoute, handleCategoryRoute] = useState<any>([]); 
+    const [contextCoords, handleCoords] = useState<ContextCoords>({ x: 0, y: 0 });
+    const [contextDisplay, handleContextDisplay] = useState<boolean>(false); 
+
+    const handleContext = (e: any) => {
+        e.preventDefault(); 
+
+        const { pageX, pageY } = e; 
+
+        handleCoords({
+            x: pageX, 
+            y: pageY
+        });
+
+        handleContextDisplay(true); 
+    }
 
     return <div className="mx-20 min-w-[300px] max-w-[500px] flex flex-col gap-5">
         <div className="flex items-center mb-5 opacity-60 select-none cursor-pointer">
@@ -30,15 +46,13 @@ export default function Categories() {
                 return <div key={ category.id } onClick={() => handleCategoryRoute([
                     ...categoryRoute, category
                 ])} className="select-none cursor-pointer hover:text-violet-500 transition-colors"
-                    onContextMenu={(e) => {
-                        e.preventDefault(); 
-
-                        console.log("Click derecho"); 
-                    }}
+                    onContextMenu={ handleContext }
                 >
                     { category.name }
                 </div>
             }) : 'Sin categorías registradas'
         }
+
+        <ContextMenu display={ contextDisplay } coords={ contextCoords } setDisplay={ handleContextDisplay } />
     </div>
 }
