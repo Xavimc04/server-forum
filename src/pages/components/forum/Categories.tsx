@@ -1,30 +1,10 @@
-import { getCategories } from "@/services/forumService";
 import { ForumCategory } from "@prisma/client"; 
-import { useEffect, useState } from "react";
-import Spinner from "../Spinner";
+import { useContext, useState } from "react"; 
+import { AuthContext } from "@/providers/Auth.context";
 
-export default function Categories() { 
-    const [categories, setCategories] = useState<ForumCategory[]>(); 
-    const [isLoading, handleLoading] = useState<boolean>(true); 
+export default function Categories() {  
+    const { categories } : any = useContext(AuthContext);  
     const [categoryRoute, handleCategoryRoute] = useState<any>([]); 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await getCategories(); 
-
-            if(response) {
-                setCategories(response); 
-            } 
-
-            handleLoading(false);
-        }
-
-        fetchData();
-    }, [])
-
-    if(isLoading) {
-        return <Spinner />
-    }
 
     return <div className="mx-20 min-w-[300px] max-w-[500px] flex flex-col gap-5">
         <div className="flex items-center mb-5 opacity-60 select-none cursor-pointer">
@@ -43,12 +23,19 @@ export default function Categories() {
                     return category.parentId === null;
                 } else { 
                     const lastRouteItem = categoryRoute[categoryRoute.length - 1]; 
+
                     return category.parentId === lastRouteItem.id;
                 }
             }).map((category:ForumCategory) => {
                 return <div key={ category.id } onClick={() => handleCategoryRoute([
                     ...categoryRoute, category
-                ])} className="select-none cursor-pointer hover:text-violet-500 transition-colors">
+                ])} className="select-none cursor-pointer hover:text-violet-500 transition-colors"
+                    onContextMenu={(e) => {
+                        e.preventDefault(); 
+
+                        console.log("Click derecho"); 
+                    }}
+                >
                     { category.name }
                 </div>
             }) : 'Sin categorías registradas'

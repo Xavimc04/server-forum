@@ -12,18 +12,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (action) {
             case "CREATE":
                 try {
-                    await prisma.forumCategory.create({
-                        data: {
-                            name, 
-                            parentId: parseInt(parent)
-                        }
-                    })
+                    if (parent) {
+                        await prisma.forumCategory.create({
+                            data: {
+                                name, 
+                                parentId: parseInt(parent)
+                            }
+                        })
+                    } else {
+                        await prisma.forumCategory.create({
+                            data: {
+                                name
+                            }
+                        })
+                    }
 
                     DiscordLog(`Se ha registrado una nueva categoría: ${ name }`);
 
                     return res.send({ done: true, message: 'New category created.' }); 
                 } catch (error) {
-                    return res.send({ done: false, message: 'An error has been appeared while creating categories.' }); 
+                    return res.send({ done: false, message: 'An error has been appeared while creating: ' + error }); 
                 } 
             case "UPDATE":
                 if(!id) {
@@ -31,13 +39,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
 
                 try {
-                    await prisma.forumCategory.update({
-                        where: { id }, 
-                        data: {
-                            name, 
-                            parentId: parseInt(parent)
-                        }
-                    })
+                    if (parent) {
+                        await prisma.forumCategory.update({
+                            where: { id }, 
+                            data: {
+                                name, 
+                                parentId: parseInt(parent)
+                            }
+                        })
+                    } else {
+                        await prisma.forumCategory.update({
+                            where: { id }, 
+                            data: {
+                                name
+                            }
+                        })
+                    }
 
                     DiscordLog(`Se ha actualizado una categoría a ${ name }`);
 

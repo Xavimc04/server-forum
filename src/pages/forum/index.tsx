@@ -5,23 +5,30 @@ import { SteamProfile } from "@/lib/passport";
 import type { NextSteamAuthApiRequest } from "@/lib/router";
 import { AuthContext } from '@/providers/Auth.context';  
 import { useEffect, useState } from "react";
-import { users } from "@prisma/client";
+import { ForumCategory, users } from "@prisma/client";
 import { getUser } from "@/services/userService";
 import Spinner from "../components/Spinner";
 import Categories from "../components/forum/Categories";
 import CategoryModal from "../components/forum/CategoryModal";
+import { getCategories } from "@/services/forumService";
 
 export default function Index({ user }:{ user: SteamProfile }) { 
     const [player, handlePlayer] = useState<users>();
+    const [categories, setCategories] = useState<ForumCategory[]>(); 
     const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
     const [creatingCategory, setCreatingCategory] = useState<boolean>(false); 
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await getUser(user._json.steamid); 
+            const categoriesRequest = await getCategories(); 
 
             if(response.user) {
                 handlePlayer(response.user); 
+            }
+
+            if(categoriesRequest) {
+                setCategories(categoriesRequest); 
             }
 
             handlePlayerLoaded(true); 
@@ -32,7 +39,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
     return <>
         {
-            playerLoaded ? <AuthContext.Provider value={{ user, player }}>
+            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories }}>
                 <Layout>
                     <main className="flex flex-wrap mt-20">
                         <div className="w-full mb-10 mx-20 flex items-center justify-end gap-7">

@@ -1,11 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion"; 
-import { useState, useEffect } from "react";
-import { ForumCategory } from "@prisma/client";
-import { getCategories } from "@/services/forumService";
+import { useState, useEffect, useContext } from "react";
+import { ForumCategory } from "@prisma/client"; 
 import instance from "@/lib/instance"; 
+import { AuthContext } from "@/providers/Auth.context";
+import { getCategories } from "@/services/forumService";
 
 export default function CategoryModal({ isVisible, closeModal } : { isVisible: boolean, closeModal: any }) {
-    const [categories, setCategories] = useState<ForumCategory[]>();  
+    const { categories, setCategories } : any = useContext(AuthContext); 
     const [name, handleName] = useState<string>(); 
     const [parent, setParent] = useState<string>(); 
     const [error, handleError] = useState<string>();
@@ -13,17 +14,7 @@ export default function CategoryModal({ isVisible, closeModal } : { isVisible: b
 
     useEffect(() => {
         handleError('');
-        handleName(''); 
-
-        const fetchData = async () => {
-            const response = await getCategories(); 
-
-            if(response) {
-                setCategories(response); 
-            }  
-        }
-
-        fetchData();
+        handleName('');  
     }, [isVisible]);
 
     const onCreate = async () => { 
@@ -37,8 +28,14 @@ export default function CategoryModal({ isVisible, closeModal } : { isVisible: b
             action: 'CREATE', 
             name, 
             parent
-        }).then(() => { 
-            handleLoading(false); 
+        }).then(async () => { 
+            handleLoading(false);  
+            const reqCategories = await getCategories(); 
+
+            if(reqCategories) {
+                setCategories(reqCategories);
+            }
+
             closeModal(false); 
         })
     } 
