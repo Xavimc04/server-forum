@@ -7,9 +7,10 @@ export default function Categories() {
     const { categories } : any = useContext(AuthContext);  
     const [categoryRoute, handleCategoryRoute] = useState<any>([]); 
     const [contextCoords, handleCoords] = useState<ContextCoords>({ x: 0, y: 0 });
-    const [contextDisplay, handleContextDisplay] = useState<boolean>(false); 
+    const [contextDisplay, handleContextDisplay] = useState<boolean>(false);  
+    const [selectedId, setSelectedId] = useState<number | any>();
 
-    const handleContext = (e: any) => {
+    const handleContext = (e: any, id: number) => {
         e.preventDefault(); 
 
         const { pageX, pageY } = e; 
@@ -19,6 +20,7 @@ export default function Categories() {
             y: pageY
         });
 
+        setSelectedId(id); 
         handleContextDisplay(true); 
     }
 
@@ -46,13 +48,13 @@ export default function Categories() {
                 return <div key={ category.id } onClick={() => handleCategoryRoute([
                     ...categoryRoute, category
                 ])} className="select-none cursor-pointer hover:text-violet-500 transition-colors"
-                    onContextMenu={ handleContext }
+                    onContextMenu={(e) => handleContext(e, category.id) }
                 >
                     { category.name }
                 </div>
             }) : 'Sin categorías registradas'
         }
 
-        <ContextMenu display={ contextDisplay } coords={ contextCoords } setDisplay={ handleContextDisplay } />
+        <ContextMenu display={ contextDisplay } coords={ contextCoords } setDisplay={ handleContextDisplay } categoryId={ selectedId } />
     </div>
 }

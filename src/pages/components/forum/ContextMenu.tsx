@@ -1,13 +1,15 @@
+import { AuthContext } from "@/providers/Auth.context";
 import { motion, AnimatePresence } from "framer-motion"; 
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 
 export interface ContextCoords {
     x: number, 
     y: number
 }
 
-export default function ContextMenu({ coords, display, setDisplay } : { coords: ContextCoords, display: boolean, setDisplay: any  }) {
+export default function ContextMenu({ coords, display, setDisplay, categoryId } : { coords: ContextCoords, display: boolean, setDisplay: any, categoryId: number  }) {
     const contextMenuRef = useRef<HTMLDivElement>(null);
+    const { setDeleting } : any = useContext(AuthContext); 
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -48,7 +50,10 @@ export default function ContextMenu({ coords, display, setDisplay } : { coords: 
                     Editar
                 </button>
 
-                <button className="flex items-center mt-2 bg-slate-950 px-7 py-2 rounded hover:bg-violet-500 transition-all hover:text-slate-950">
+                <button onClick={() => {
+                    if(categoryId) setDeleting(categoryId)
+                    setDisplay(false); 
+                }} className="flex items-center mt-2 bg-slate-950 px-7 py-2 rounded hover:bg-violet-500 transition-all hover:text-slate-950">
                     <span className="material-symbols-outlined mr-3">delete</span>
 
                     Eliminar

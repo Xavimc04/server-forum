@@ -11,12 +11,14 @@ import Spinner from "../components/Spinner";
 import Categories from "../components/forum/Categories";
 import CategoryModal from "../components/forum/CategoryModal";
 import { getCategories } from "@/services/forumService";
+import DeletingModal from "../components/forum/DeletingModal";
 
 export default function Index({ user }:{ user: SteamProfile }) { 
     const [player, handlePlayer] = useState<users>();
     const [categories, setCategories] = useState<ForumCategory[]>(); 
     const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
     const [creatingCategory, setCreatingCategory] = useState<boolean>(false); 
+    const [deleting, setDeleting] = useState<ForumCategory | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,7 +44,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
     return <>
         {
-            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories }}>
+            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories, deleting, setDeleting }}>
                 <Layout>
                     <main className="flex flex-wrap mt-20">
                         <div className="w-full mb-10 mx-20 flex items-center justify-end gap-7">
@@ -67,6 +69,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                     </main>
 
                     <CategoryModal isVisible={ creatingCategory } closeModal={ setCreatingCategory } />
+                    <DeletingModal />
                 </Layout>
             </AuthContext.Provider> : <Spinner />
         }
