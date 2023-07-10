@@ -12,6 +12,7 @@ import Categories from "../components/forum/Categories";
 import CategoryModal from "../components/forum/CategoryModal";
 import { getCategories } from "@/services/forumService";
 import DeletingModal from "../components/forum/DeletingModal";
+import PostModal from "../components/forum/PostModal";
 
 export default function Index({ user }:{ user: SteamProfile }) { 
     const [player, handlePlayer] = useState<users>();
@@ -19,6 +20,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
     const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
     const [creatingCategory, setCreatingCategory] = useState<boolean>(false); 
     const [deleting, setDeleting] = useState<ForumCategory | null>(null);
+    const [creatingPost, handleCreatePost] = useState<boolean>(false); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,19 +46,19 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
     return <>
         {
-            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories, setCreatingCategory, deleting, setDeleting }}>
+            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories, setCreatingCategory, deleting, setDeleting, creatingPost, handleCreatePost }}>
                 <Layout>
-                    <main className="flex flex-wrap mt-20">
-                        <div className="w-full mb-10 mx-20 flex items-center justify-end gap-7">
+                    <main className="flex flex-wrap mt-10">
+                        <div className="w-full mb-10 mx-5 flex items-center justify-end gap-7">
                             {
-                                player && player.rank != 0 && <button onClick={() => setCreatingCategory(true)} className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
+                                player && player.rank != 0 && <button disabled={ deleting != null || creatingPost ? true : false } onClick={() => setCreatingCategory(true)} className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
                                     <span className="material-symbols-outlined mr-3">category</span>
 
                                     Nueva categoría
                                 </button>
                             }
 
-                            <button className="px-5 border border-violet-500 py-3 rounded-full flex items-center text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">
+                            <button disabled={ deleting != null || creatingCategory ? true : false } onClick={() => handleCreatePost(true)} className="px-5 border border-violet-500 py-3 rounded-full flex items-center text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">
                                 <span className="material-symbols-outlined mr-3">add_task</span>
 
                                 Nuevo post
@@ -70,6 +72,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
                     <CategoryModal isVisible={ creatingCategory } />
                     <DeletingModal />
+                    <PostModal />
                 </Layout>
             </AuthContext.Provider> : <Spinner />
         }

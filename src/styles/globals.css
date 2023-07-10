@@ -19,6 +19,27 @@ input:focus {
     font-family: poppins;
 } 
 
+.ql-container {
+    border: none !important;
+} 
+
+.ql-toolbar {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+  
+.ql-editor {
+    color: #ffffff !important; 
+    min-height: 250px;
+}
+ 
+.quill { 
+    border: 3px solid rgb(2, 6, 23); 
+    border-radius: 5px;
+    padding: 10px 10px; 
+}
+
 @font-face {
 	font-family: poppins;
 	src: url('./fonts/poppins.ttf');

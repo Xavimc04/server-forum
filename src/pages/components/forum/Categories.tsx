@@ -24,7 +24,7 @@ export default function Categories() {
         handleContextDisplay(true); 
     }
 
-    return <div className="mx-20 min-w-[300px] max-w-[500px] flex flex-col gap-5">
+    return <div className="mx-10 min-w-[300px] max-w-[500px] flex flex-col gap-5">
         <div className="flex items-center mb-5 opacity-60 select-none cursor-pointer">
                 <span onClick={() => handleCategoryRoute([])}>Inicio /</span>
 

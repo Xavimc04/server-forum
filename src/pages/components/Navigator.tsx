@@ -19,8 +19,7 @@ export default function Navigator() {
                 <ul className="flex poppins items-center gap-6 ml-10 select-none">
                     <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/')}>Inicio</li>
                     <li className="cursor-pointer transition-all hover:text-violet-500">Tienda</li>
-                    <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/forum')}>Foro</li>
-                    <li className="cursor-pointer transition-all hover:text-violet-500">Whitelist</li>
+                    <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/forum')}>Foro</li> 
                 </ul>
             </div>
 
@@ -46,7 +45,6 @@ export default function Navigator() {
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/')}>Inicio</li>
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Tienda</li>
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/forum')}>Foro</li>
-                <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Whitelist</li>
             </ul>
         }
     </div>
