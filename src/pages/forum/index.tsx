@@ -44,7 +44,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
     return <>
         {
-            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories, deleting, setDeleting }}>
+            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories, setCreatingCategory, deleting, setDeleting }}>
                 <Layout>
                     <main className="flex flex-wrap mt-20">
                         <div className="w-full mb-10 mx-20 flex items-center justify-end gap-7">
@@ -68,7 +68,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                         <div className="flex-1 rounded-lg mr-20"></div>
                     </main>
 
-                    <CategoryModal isVisible={ creatingCategory } closeModal={ setCreatingCategory } />
+                    <CategoryModal isVisible={ creatingCategory } />
                     <DeletingModal />
                 </Layout>
             </AuthContext.Provider> : <Spinner />

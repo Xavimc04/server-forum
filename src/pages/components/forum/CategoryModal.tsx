@@ -5,8 +5,8 @@ import instance from "@/lib/instance";
 import { AuthContext } from "@/providers/Auth.context";
 import { getCategories } from "@/services/forumService";
 
-export default function CategoryModal({ isVisible, closeModal } : { isVisible: boolean, closeModal: any }) {
-    const { categories, setCategories } : any = useContext(AuthContext); 
+export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
+    const { categories, setCategories, setDeleting, setCreatingCategory, deleting } : any = useContext(AuthContext); 
     const [name, handleName] = useState<string>(); 
     const [parent, setParent] = useState<string>(); 
     const [error, handleError] = useState<string>();
@@ -15,6 +15,7 @@ export default function CategoryModal({ isVisible, closeModal } : { isVisible: b
     useEffect(() => {
         handleError('');
         handleName('');  
+        setDeleting(null); 
     }, [isVisible]);
 
     const onCreate = async () => { 
@@ -36,14 +37,14 @@ export default function CategoryModal({ isVisible, closeModal } : { isVisible: b
                 setCategories(reqCategories);
             }
 
-            closeModal(false); 
+            setCreatingCategory(false); 
         })
     } 
 
     return <section className="flex justify-center">
         <AnimatePresence>
             {
-                isVisible && <motion.div
+                isVisible && !deleting && <motion.div
                     initial={{ opacity: 0, y: "100%" }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: "100%" }}
@@ -52,7 +53,7 @@ export default function CategoryModal({ isVisible, closeModal } : { isVisible: b
                     <div className="flex items-center w-full justify-between flex-wrap">
                         Nueva categoría
 
-                        <span onClick={() => closeModal(false)} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
+                        <span onClick={() => setCreatingCategory(false)} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
                             textShadow: '0px 0px 10px red'
                         }}>close</span>
 
