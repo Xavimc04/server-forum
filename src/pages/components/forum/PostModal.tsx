@@ -3,6 +3,7 @@ import Editor from "./Editor";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/providers/Auth.context";
 import { ForumCategory } from "@prisma/client";
+import instance from "@/lib/instance";
 
 export default function PostModal() {
     const { creatingPost, handleCreatePost, deleting, categories } : any = useContext(AuthContext); 
@@ -25,6 +26,21 @@ export default function PostModal() {
             return handleError("Debes escoger una categoría para poder crear el post."); 
         } else if(editor.length == 0) {
             return handleError("Para poder seguir deberás introducir un argumento mínimo en el editor."); 
+        }
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('parent', parent);
+        formData.append('editor', editor);
+        formData.append('image', image);
+        formData.append('action', 'CREATE');
+
+        try {
+            const response = await instance.post('/api/forum/post', formData);
+
+            console.log(response.data); 
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -68,7 +84,7 @@ export default function PostModal() {
                                 onChange={(e) => setParent(e.target.value)}
                                 className="bg-slate-950 ml-0 md:ml-5 py-2.5 rounded px-4 mt-5 md:mt-0 w-full md:w-auto" 
                             >
-                                <option value="">Inicio</option>
+                                <option value=""></option>
 
                                 {
                                     categories.map((category: ForumCategory) => {

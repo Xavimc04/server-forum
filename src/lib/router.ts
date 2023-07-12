@@ -10,7 +10,7 @@ const router = nextConnect<NextApiRequest, NextApiResponse>();
 
 router.use(session({
     secret: process.env.SESSION_SECRET,
-    maxAge: 1000 * 60 * 60 * 24 * 30
+    maxAge: 1000 * 60 * 60 * 24
 }));
 
 router.use(passport.initialize());

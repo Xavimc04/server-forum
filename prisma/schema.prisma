@@ -42,9 +42,9 @@ model Post {
     title      String?
     category   Int       
     steam      String
-    views      Int       @default(0)
+    views      Int?       @default(0)
     content    String    @db.Text
-    likes      Int       @default(0)
+    likes      Int?       @default(0)
     banner     String?   @db.Text
 
     @@map(name: "forum_posts")
