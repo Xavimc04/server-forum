@@ -6,7 +6,7 @@ import { ForumCategory } from "@prisma/client";
 import instance from "@/lib/instance";
 
 export default function PostModal() {
-    const { creatingPost, handleCreatePost, deleting, categories } : any = useContext(AuthContext); 
+    const { user, creatingPost, handleCreatePost, deleting, categories } : any = useContext(AuthContext); 
     const [title, handleTitle] = useState<string>(''); 
     const [parent, setParent] = useState<string>(''); 
     const [editor, handleEditor] = useState<string>('');
@@ -34,6 +34,7 @@ export default function PostModal() {
         formData.append('editor', editor);
         formData.append('image', image);
         formData.append('action', 'CREATE');
+        formData.append('steam', user._json.steamid); 
 
         try {
             const response = await instance.post('/api/forum/post', formData);

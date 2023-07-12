@@ -27,7 +27,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         })
                     }
 
-                    DiscordLog(`Se ha registrado una nueva categoría: ${ name }`);
+                    DiscordLog({
+                        title: 'Categorías', 
+                        message: `Se ha registrado una nueva categoría: ${ name }`
+                    });
 
                     return res.send({ done: true, message: 'New category created.' }); 
                 } catch (error) {
@@ -54,9 +57,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                 name
                             }
                         })
-                    }
+                    } 
 
-                    DiscordLog(`Se ha actualizado una categoría a ${ name }`);
+                    DiscordLog({
+                        title: 'Categorías', 
+                        message: `Se ha actualizado una categoría a ${ name }`
+                    });
 
                     return res.send({ done: true, message: 'Category has been updated.' }); 
                 } catch (error) {
@@ -72,7 +78,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         where: { id }
                     })
 
-                    DiscordLog(`Se ha borrado la categoría con ID: ${ id }`);
+                    DiscordLog({
+                        title: 'Categorías', 
+                        message: `Se ha borrado la categoría con ID: ${ id }`
+                    });
 
                     return res.send({ done: true, message: 'Category has been deleted.' }); 
                 } catch (error) {

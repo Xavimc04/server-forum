@@ -53,9 +53,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.send({ error: "All params required, form data has no value" });
         }
 
-        const { editor, title, parent, action } : any = fields; 
+        const { editor, title, parent, action, steam } : any = fields; 
 
-        if(!editor || !title || !parent || !action) {
+        if(!editor || !title || !parent || !action || !steam) {
             return res.send({ error: "All params required, form data has no value" });
         } 
 
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             pinned: false, 
             title: title[0], 
             category: parseInt(parent[0]), 
-            steam: '123455', 
+            steam: steam[0], 
             content: editor[0], 
             banner: ''
         }
@@ -79,6 +79,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 await prisma.post.create({
                     data: prismaData
                 })    
+
+                DiscordLog({
+                    title: 'Nuevo post', 
+                    message: title[0]
+                });
 
                 return res.send({ done: true, message: "POST has been created" });  
             default:
