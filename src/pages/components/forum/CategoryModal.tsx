@@ -49,6 +49,9 @@ export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: "100%" }}
                     className="absolute bottom-0 bg-slate-900 w-[90%] xl:w-[40%] p-5 rounded-t-lg pb-10" 
+                    style={{
+                        boxShadow: '0px 0px 40px #020617'
+                    }}
                 >
                     <div className="flex items-center w-full justify-between flex-wrap">
                         Nueva categoría

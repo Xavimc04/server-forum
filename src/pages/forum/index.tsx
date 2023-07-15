@@ -13,6 +13,7 @@ import CategoryModal from "../components/forum/CategoryModal";
 import { getCategories } from "@/services/forumService";
 import DeletingModal from "../components/forum/DeletingModal";
 import PostModal from "../components/forum/PostModal";
+import RenderPosts from "../components/forum/RenderPosts";
 
 export default function Index({ user }:{ user: SteamProfile }) { 
     const [player, handlePlayer] = useState<users>();
@@ -58,16 +59,20 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                 </button>
                             }
 
-                            <button disabled={ deleting != null || creatingCategory ? true : false } onClick={() => handleCreatePost(true)} className="px-5 border border-violet-500 py-3 rounded-full flex items-center text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">
-                                <span className="material-symbols-outlined mr-3">add_task</span>
+                            {
+                                user && <button disabled={ deleting != null || creatingCategory ? true : false } onClick={() => handleCreatePost(true)} className="px-5 border border-violet-500 py-3 rounded-full flex items-center text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">
+                                    <span className="material-symbols-outlined mr-3">add_task</span>
 
-                                Nuevo post
-                            </button>
+                                    Nuevo post
+                                </button>
+                            }
                         </div>
 
                         <Categories />
 
-                        <div className="flex-1 rounded-lg mr-20"></div>
+                        <div className="flex-1 rounded-lg mr-5">
+                            <RenderPosts />
+                        </div>
                     </main>
 
                     <CategoryModal isVisible={ creatingCategory } />

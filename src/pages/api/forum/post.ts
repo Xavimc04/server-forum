@@ -38,7 +38,26 @@ const readFile = (
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method === 'GET') {
-        return res.send({ message: 'Posts' }); 
+        const { SKIP_VALUE, CATEGORY, STAKE } : any = req.query; 
+
+        const skipValue = parseInt(String(SKIP_VALUE), 10) || 0;
+        const stakeValue = parseInt(String(STAKE), 10) || 0;
+        const categoryValue = parseInt(String(CATEGORY), 10);
+
+        const posts = await prisma.post.findMany({
+            take: stakeValue,
+            skip: skipValue,
+            orderBy: [
+                { pinned: 'desc' },
+                { likes: 'desc' }, 
+                { views: 'desc' }
+            ],
+            ...(categoryValue && { where: { category: categoryValue } })
+        });
+
+        const counter = await prisma.post.count();
+
+        return res.send({ done: true, posts, counter }); 
     } else {
         try {
             await fs.readdir(path.join(process.cwd() + "/public", "/images"));

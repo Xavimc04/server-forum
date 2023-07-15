@@ -10,14 +10,20 @@ export default function PostModal() {
     const [title, handleTitle] = useState<string>(''); 
     const [parent, setParent] = useState<string>(''); 
     const [editor, handleEditor] = useState<string>('');
-    const [image, handleImage] = useState<File | any>();
+    const [image, handleImage] = useState<File | any>('');
     const [error, handleError] = useState<string>();
 
     useEffect(() => {
+        defaultValues(); 
+    }, [creatingPost])
+
+    const defaultValues = () => {
         handleError(''); 
         setParent(''); 
         handleTitle(''); 
-    }, [creatingPost])
+        handleImage(null); 
+        handleEditor(''); 
+    }
 
     const onCreate = async () => {
         if(title.length == 0) {
@@ -39,7 +45,12 @@ export default function PostModal() {
         try {
             const response = await instance.post('/api/forum/post', formData);
 
-            console.log(response.data); 
+            if(!response.data.done) {
+                return handleError("¡Vaya! Ha aparecido un error mientras se creaba el post...");
+            }
+
+            defaultValues(); 
+            handleCreatePost(false); 
         } catch (error) {
             console.error(error);
         }
@@ -52,7 +63,10 @@ export default function PostModal() {
                     initial={{ opacity: 0, y: "100%" }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: "100%" }}
-                    className="absolute bottom-0 bg-slate-900 w-[90%] xl:w-[40%] p-5 rounded-t-lg pb-10" 
+                    className="absolute bottom-0 bg-slate-900 w-[90%] xl:w-[40%] p-5 rounded-t-lg pb-10"
+                    style={{
+                        boxShadow: '0px 0px 40px #020617'
+                    }}
                 >
                     <div className="flex items-center w-full justify-between flex-wrap">
                         Nuevo post

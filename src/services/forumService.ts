@@ -9,3 +9,13 @@ export async function getCategories() {
         return false;
     }
 }
+
+export async function getPosts(STAKE: number, SKIP_VALUE: number, CATEGORY?: string) {
+    try {
+        return await instance.get(`/api/forum/post?STAKE=${ STAKE }&SKIP_VALUE=${ SKIP_VALUE }&CATEGORY=${ CATEGORY }`).then(response => { 
+            return response.data
+        })
+    } catch (error: any) {
+        return error;
+    }
+}
