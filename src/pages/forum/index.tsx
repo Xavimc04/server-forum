@@ -109,7 +109,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
         {
             playerLoaded ? <AuthContext.Provider value={{ user, state, dispatch }}>
                 <Layout>
-                    <main className="flex flex-wrap mt-10">
+                    <main className="flex flex-wrap mt-10 mb-10">
                         <div className="w-full mb-10 mx-5 flex items-center justify-end gap-7">
                             {
                                 state.player && state.player.rank != 0 && <button disabled={ state.deleting != null || state.creatingPost ? true : false } onClick={() => dispatch({
