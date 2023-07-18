@@ -6,7 +6,7 @@ import { AuthContext } from "@/providers/Auth.context";
 import { getCategories } from "@/services/forumService";
 
 export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
-    const { categories, setCategories, setDeleting, setCreatingCategory, deleting } : any = useContext(AuthContext); 
+    const { state, dispatch } : any = useContext(AuthContext); 
     const [name, handleName] = useState<string>(); 
     const [parent, setParent] = useState<string>(); 
     const [error, handleError] = useState<string>();
@@ -15,7 +15,11 @@ export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
     useEffect(() => {
         handleError('');
         handleName('');  
-        setDeleting(null); 
+        
+        dispatch({
+            type: "SET_DELETING", 
+            payload: null
+        }); 
     }, [isVisible]);
 
     const onCreate = async () => { 
@@ -33,18 +37,24 @@ export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
             handleLoading(false);  
             const reqCategories = await getCategories(); 
 
-            if(reqCategories) {
-                setCategories(reqCategories);
+            if(reqCategories) { 
+                dispatch({
+                    type: "SET_CATEGORIES", 
+                    payload: reqCategories
+                })
             }
 
-            setCreatingCategory(false); 
+            dispatch({
+                type: "SET_CREATING_CATEGORY", 
+                payload: false
+            })
         })
     } 
 
     return <section className="flex justify-center">
         <AnimatePresence>
             {
-                isVisible && !deleting && <motion.div
+                isVisible && !state.deleting && <motion.div
                     initial={{ opacity: 0, y: "100%" }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: "100%" }}
@@ -56,7 +66,10 @@ export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
                     <div className="flex items-center w-full justify-between flex-wrap">
                         Nueva categoría
 
-                        <span onClick={() => setCreatingCategory(false)} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
+                        <span onClick={() => dispatch({
+                            type: "SET_CREATING_CATEGORY", 
+                            payload: false
+                        })} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
                             textShadow: '0px 0px 10px red'
                         }}>close</span>
 
@@ -80,7 +93,7 @@ export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
                         <input disabled={ isLoading } type="text" value={ name } onChange={(e) => handleName(e.target.value)} maxLength={ 35 } className="bg-slate-950 w-full rounded py-2 flex-1 px-4" placeholder="Nombre de la categoría (Max: 35 carácteres)" />
 
                         {
-                            categories && categories[0] && <motion.select
+                            state.categories && state.categories[0] && <motion.select
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }} 
@@ -92,7 +105,7 @@ export default function CategoryModal({ isVisible } : { isVisible: boolean }) {
                                 <option value="">Inicio</option>
 
                                 {
-                                    categories.map((category: ForumCategory) => {
+                                    state.categories.map((category: ForumCategory) => {
                                         return <option key={ category.id } value={ category.id }>{ category.name }</option>
                                     })
                                 }

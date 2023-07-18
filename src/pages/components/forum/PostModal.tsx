@@ -6,7 +6,7 @@ import { ForumCategory } from "@prisma/client";
 import instance from "@/lib/instance";
 
 export default function PostModal() {
-    const { user, creatingPost, handleCreatePost, deleting, categories } : any = useContext(AuthContext); 
+    const { user, state, dispatch } : any = useContext(AuthContext); 
     const [title, handleTitle] = useState<string>(''); 
     const [parent, setParent] = useState<string>(''); 
     const [editor, handleEditor] = useState<string>('');
@@ -15,7 +15,7 @@ export default function PostModal() {
 
     useEffect(() => {
         defaultValues(); 
-    }, [creatingPost])
+    }, [state.creatingPost])
 
     const defaultValues = () => {
         handleError(''); 
@@ -50,14 +50,17 @@ export default function PostModal() {
             }
 
             defaultValues(); 
-            handleCreatePost(false); 
+            dispatch({
+                type: "SET_CREATING_POST", 
+                payload: false
+            }); 
         } catch (error) {
             console.error(error);
         }
     }
 
     return <section className="flex justify-center">
-        { creatingPost && !deleting && 
+        { state.creatingPost && !state.deleting && 
             <AnimatePresence> 
                 <motion.div
                     initial={{ opacity: 0, y: "100%" }}
@@ -71,7 +74,10 @@ export default function PostModal() {
                     <div className="flex items-center w-full justify-between flex-wrap">
                         Nuevo post
 
-                        <span onClick={() => handleCreatePost(false)} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
+                        <span onClick={() => dispatch({
+                            type: "SET_CREATING_POST", 
+                            payload: false
+                        })} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
                             textShadow: '0px 0px 10px red'
                         }}>close</span> 
                     </div>  
@@ -91,7 +97,7 @@ export default function PostModal() {
                         <input type="text" value={ title } onChange={(e) => handleTitle(e.target.value)} maxLength={ 35 } className="bg-slate-950 w-full rounded py-2 flex-1 px-4" placeholder="Título del Post (Max: 35 carácteres)" />
 
                         {
-                            categories && categories[0] && <motion.select
+                            state.categories && state.categories[0] && <motion.select
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }} 
@@ -102,7 +108,7 @@ export default function PostModal() {
                                 <option value=""></option>
 
                                 {
-                                    categories.map((category: ForumCategory) => {
+                                    state.categories.map((category: ForumCategory) => {
                                         return <option key={ category.id } value={ category.id }>{ category.name }</option>
                                     })
                                 }

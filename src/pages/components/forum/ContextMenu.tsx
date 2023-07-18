@@ -9,7 +9,7 @@ export interface ContextCoords {
 
 export default function ContextMenu({ coords, display, setDisplay, categoryId } : { coords: ContextCoords, display: boolean, setDisplay: any, categoryId: number  }) {
     const contextMenuRef = useRef<HTMLDivElement>(null);
-    const { setDeleting } : any = useContext(AuthContext); 
+    const { dispatch } : any = useContext(AuthContext); 
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -45,7 +45,10 @@ export default function ContextMenu({ coords, display, setDisplay, categoryId } 
                 }}
             >  
                 <button onClick={() => {
-                    if(categoryId) setDeleting(categoryId)
+                    if(categoryId) dispatch({
+                        type: "SET_DELETING", 
+                        payload: categoryId
+                    })
                     setDisplay(false); 
                 }} className="flex items-center mt-2 bg-slate-950 px-7 py-2 rounded hover:bg-violet-500 transition-all hover:text-slate-950">
                     <span className="material-symbols-outlined mr-3">delete</span>

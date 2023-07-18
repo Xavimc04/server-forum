@@ -1,12 +1,11 @@
-import { AuthContext } from "@/providers/Auth.context";
-import { ForumCategory } from "@prisma/client";
+import { AuthContext } from "@/providers/Auth.context"; 
 import { motion, AnimatePresence } from "framer-motion"; 
 import { useContext, useState } from "react";
 import instance from "@/lib/instance";
 import { getCategories } from "@/services/forumService";
 
 export default function DeletingModal() {
-    const { deleting, setDeleting, categories, setCategories } : any = useContext(AuthContext); 
+    const { state, dispatch } : any = useContext(AuthContext); 
     const [isLoading, handleLoading] = useState<boolean>(false); 
 
     const onDelete = async () => {
@@ -14,23 +13,29 @@ export default function DeletingModal() {
 
         instance.post('/api/forum/categories', {
             action: 'DELETE', 
-            id: deleting
+            id: state.deleting
         }).then(async () => { 
             handleLoading(false);  
             const reqCategories = await getCategories(); 
 
-            if(reqCategories) {
-                setCategories(reqCategories);
-            }
+            dispatch({
+                type: "SET_DELETING", 
+                payload: false
+            })
 
-            setDeleting(null); 
+            if(reqCategories) {
+                dispatch({
+                    type: "SET_CATEGORIES", 
+                    payload: reqCategories
+                })
+            }
         })
     }
 
     return <section className="flex justify-center">
         <AnimatePresence>
             {
-                deleting != null && <motion.div
+                state.deleting != null && <motion.div
                     initial={{ opacity: 0, y: "100%" }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: "100%" }}
@@ -42,12 +47,15 @@ export default function DeletingModal() {
                     <div className="flex items-center w-full justify-between flex-wrap">
                         Eliminar categoría
 
-                        <span onClick={() => setDeleting(null)} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
+                        <span onClick={() => dispatch({
+                            type: "SET_DELETING", 
+                            payload: false
+                        })} title="Cerrar modal" className="material-symbols-outlined select-none cursor-pointer text-red-500" style={{
                             textShadow: '0px 0px 10px red'
                         }}>close</span>
 
                         <p className="w-full mt-4 text-gray-500">
-                            ¿Estás seguro de que quieres eliminar la categoría { categories.filter((category: ForumCategory) => category.id == deleting)[0].name }? Una vez aceptes no podrás revertir los cambios.
+                            ¿Estás seguro de que quieres eliminar la categoría? Una vez aceptes no podrás revertir los cambios.
                         </p>
                     </div>  
 

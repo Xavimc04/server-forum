@@ -3,25 +3,38 @@ import { getPosts } from "@/services/forumService";
 import { Post } from "@prisma/client";
 import { useState, useEffect, useContext } from "react";
 
-const STAKE = 1; 
+const STAKE = 10; 
 
 export default function RenderPosts() {
-    const { categories } : any = useContext(AuthContext); 
+    const { state } : any = useContext(AuthContext); 
     const [totalCounter, setTotal] = useState<number>(0); 
     const [posts, setPosts] = useState<Post[]>([]);
     const [SKIP_VALUE, setSkipValue] = useState<number>(0); 
 
     useEffect(() => {
-        fetchPosts(); 
+        fetchPosts(state.categoryRoute.length > 0 ? state.categoryRoute[state.categoryRoute.length - 1].id : null, false); 
     }, [SKIP_VALUE]); 
 
-    const fetchPosts = async () => {
-        const response = await getPosts(STAKE, SKIP_VALUE);  
+    useEffect(() => {
+        if(state.categoryRoute.length > 0) {
+            fetchPosts(state.categoryRoute.length > 0 ? state.categoryRoute[state.categoryRoute.length - 1].id : null, true); 
+        } else {
+            fetchPosts(null, true); 
+        }
+    }, [state.categoryRoute])
+
+    const fetchPosts = async (CATEGORY?: number | null, renew?: boolean) => {
+        const response = await getPosts(STAKE, SKIP_VALUE, `${ CATEGORY }`);  
         
         if(response.done) {
+            if(renew) {
+                return setPosts(response.posts);
+            }
+
             setPosts([
                 ...posts, ...response.posts
             ]); 
+
             setTotal(response.counter)
         }
     }
@@ -49,7 +62,7 @@ export default function RenderPosts() {
 
         {
             posts && posts[0] && posts.map((post: Post) => {
-                return <div key={ post.id } className="w-full bg-slate-900 rounded flex items-center py-5">
+                return <div key={ Math.floor(Math.random() * 100000) } className="w-full bg-slate-900 rounded flex items-center py-5">
                     <span className="text-gray-600 px-10 text-lg">
                         # { post.id }
                     </span>
@@ -61,8 +74,8 @@ export default function RenderPosts() {
                             )  
                         ) }</h2>
 
-                        { categories.filter((category: any) => category.id == post.category).map((category:any) => {
-                            return <small className="text-gray-600">{ category.name }</small>
+                        { state.categories.filter((category: any) => category.id == post.category).map((category:any) => {
+                            return <small key={ Math.floor(Math.random() * 100000) } className="text-gray-600">{ category.name }</small>
                         }) }
                     </div>
 

@@ -5,23 +5,77 @@ import { SteamProfile } from "@/lib/passport";
 import type { NextSteamAuthApiRequest } from "@/lib/router";
 import { AuthContext } from '@/providers/Auth.context';  
 import { useEffect, useState } from "react";
-import { ForumCategory, users } from "@prisma/client";
 import { getUser } from "@/services/userService";
 import Spinner from "../components/Spinner";
-import Categories from "../components/forum/Categories";
-import CategoryModal from "../components/forum/CategoryModal";
 import { getCategories } from "@/services/forumService";
+import { useReducer } from "react";
+import Categories from "../components/forum/Categories";
+import RenderPosts from "../components/forum/RenderPosts";
+import CategoryModal from "../components/forum/CategoryModal";
 import DeletingModal from "../components/forum/DeletingModal";
 import PostModal from "../components/forum/PostModal";
-import RenderPosts from "../components/forum/RenderPosts";
+  
+const initialState = {
+    player: null,
+    categories: null,
+    creatingCategory: false,
+    deleting: false,
+    creatingPost: false,
+    categoryRoute: []
+};
 
-export default function Index({ user }:{ user: SteamProfile }) { 
-    const [player, handlePlayer] = useState<users>();
-    const [categories, setCategories] = useState<ForumCategory[]>(); 
+function reducer(state: typeof initialState, action: { type: string, payload: any }) {
+    const { type, payload } = action; 
+
+    if(type === 'SET_PLAYER') {
+        return {
+            ...state, 
+            player: payload
+        }
+    }
+
+    if(type === 'SET_CATEGORIES') {
+        return {
+            ...state, 
+            categories: payload
+        }
+    }
+
+    if(type === 'SET_CREATING_CATEGORY') {
+        return {
+            ...state, 
+            creatingCategory: payload
+        }
+    }
+
+    if(type === 'SET_DELETING') {
+        return {
+            ...state, 
+            deleting: payload
+        }
+    }
+
+    if(type === 'SET_CREATING_POST') {
+        return {
+            ...state, 
+            creatingPost: payload
+        }
+    }
+
+    if(type === 'SET_CATEGORY_ROUTE') {
+        return {
+            ...state, 
+            categoryRoute: payload
+        }
+    }
+    
+    return state; 
+} 
+
+export default function Index({ user }:{ user: SteamProfile }) {    
+    const [state, dispatch] = useReducer(reducer, initialState); 
+
     const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
-    const [creatingCategory, setCreatingCategory] = useState<boolean>(false); 
-    const [deleting, setDeleting] = useState<ForumCategory | null>(null);
-    const [creatingPost, handleCreatePost] = useState<boolean>(false); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,14 +83,20 @@ export default function Index({ user }:{ user: SteamProfile }) {
                 const response = await getUser(user._json.steamid); 
 
                 if(response.user) {
-                    handlePlayer(response.user); 
+                    dispatch({
+                        type: "SET_PLAYER", 
+                        payload: response.user
+                    })
                 }
             }
 
             const categoriesRequest = await getCategories(); 
 
             if(categoriesRequest) {
-                setCategories(categoriesRequest); 
+                dispatch({
+                    type: "SET_CATEGORIES", 
+                    payload: categoriesRequest
+                })
             }
 
             handlePlayerLoaded(true); 
@@ -47,12 +107,15 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
     return <>
         {
-            playerLoaded ? <AuthContext.Provider value={{ user, player, categories, setCategories, setCreatingCategory, deleting, setDeleting, creatingPost, handleCreatePost }}>
+            playerLoaded ? <AuthContext.Provider value={{ user, state, dispatch }}>
                 <Layout>
                     <main className="flex flex-wrap mt-10">
                         <div className="w-full mb-10 mx-5 flex items-center justify-end gap-7">
                             {
-                                player && player.rank != 0 && <button disabled={ deleting != null || creatingPost ? true : false } onClick={() => setCreatingCategory(true)} className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
+                                state.player && state.player.rank != 0 && <button disabled={ state.deleting != null || state.creatingPost ? true : false } onClick={() => dispatch({
+                                    type: "SET_CREATING_CATEGORY", 
+                                    payload: true
+                                }) } className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
                                     <span className="material-symbols-outlined mr-3">category</span>
 
                                     Nueva categoría
@@ -60,7 +123,10 @@ export default function Index({ user }:{ user: SteamProfile }) {
                             }
 
                             {
-                                user && <button disabled={ deleting != null || creatingCategory ? true : false } onClick={() => handleCreatePost(true)} className="px-5 border border-violet-500 py-3 rounded-full flex items-center text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">
+                                user && <button disabled={ state.deleting != null || state.creatingCategory ? true : false } onClick={() => dispatch({
+                                    type: "SET_CREATING_POST", 
+                                    payload: true
+                                })} className="px-5 border border-violet-500 py-3 rounded-full flex items-center text-violet-500 hover:bg-violet-500 hover:shadow hover:shadow-violet-500 hover:text-slate-950 transition-all">
                                     <span className="material-symbols-outlined mr-3">add_task</span>
 
                                     Nuevo post
@@ -74,10 +140,11 @@ export default function Index({ user }:{ user: SteamProfile }) {
                             <RenderPosts />
                         </div>
                     </main>
-
-                    <CategoryModal isVisible={ creatingCategory } />
+                            
+                    <CategoryModal isVisible={ state.creatingCategory } />
                     <DeletingModal />
                     <PostModal />
+
                 </Layout>
             </AuthContext.Provider> : <Spinner />
         }
