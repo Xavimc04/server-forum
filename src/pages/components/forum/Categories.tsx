@@ -5,7 +5,7 @@ import ContextMenu, { ContextCoords } from "./ContextMenu";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function Categories() {  
-    const { state, dispatch } : any = useContext(AuthContext);  
+    const { user, state, dispatch } : any = useContext(AuthContext);  
     const [contextCoords, handleCoords] = useState<ContextCoords>({ x: 0, y: 0 });
     const [contextDisplay, handleContextDisplay] = useState<boolean>(false);  
     const [selectedId, setSelectedId] = useState<number | any>();
@@ -71,12 +71,12 @@ export default function Categories() {
                                 key={category.id}
                                 onClick={() =>
                                     dispatch({
-                                    type: "SET_CATEGORY_ROUTE",
-                                    payload: [...state.categoryRoute, category],
+                                        type: "SET_CATEGORY_ROUTE",
+                                        payload: [...state.categoryRoute, category],
                                     })
                                 }
                                 className="select-none cursor-pointer hover:text-violet-500 transition-colors"
-                                onContextMenu={(e) => handleContext(e, category.id)}
+                                onContextMenu={(e) => state.player && state.player.rank != 0 && handleContext(e, category.id)}
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }} 
                                 exit={{ opacity: 0, y: -10 }} 
