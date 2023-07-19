@@ -13,7 +13,7 @@ import Categories from "../components/forum/Categories";
 import RenderPosts from "../components/forum/RenderPosts";
 import CategoryModal from "../components/forum/CategoryModal";
 import DeletingModal from "../components/forum/DeletingModal";
-import PostModal from "../components/forum/PostModal";
+import PostModal from "../components/forum/PostModal"; 
   
 const initialState = {
     player: null,
@@ -143,7 +143,6 @@ export default function Index({ user }:{ user: SteamProfile }) {
                     <CategoryModal isVisible={ state.creatingCategory } />
                     <DeletingModal />
                     <PostModal />
-
                 </Layout>
             </AuthContext.Provider> : <Spinner />
         }

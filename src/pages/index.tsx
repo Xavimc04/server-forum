@@ -34,7 +34,6 @@ export default function Home({ user }:{ user: SteamProfile }) {
                 <div className="absolute bottom-0 w-full bg-gradient-to-t from-slate-950 to-transparent h-[200px]"></div>
             </section> 
 
-
             <Footer />
         </Layout>
     </AuthContext.Provider>

@@ -49,6 +49,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }); 
 
                 if(!singlePost) return res.send({ done: false, message: "¡Vaya! Parece que el post que estás buscando no existe..." }); 
+
+                await prisma.post.update({
+                    where: {
+                        id: parseInt(String(POST_ID))
+                    }, 
+                    data: {
+                        views: singlePost.views ? singlePost.views + 1 : 1
+                    }
+                })
     
                 return res.send({ done: true, post: singlePost }); 
             } catch (error) {

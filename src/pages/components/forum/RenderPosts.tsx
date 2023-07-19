@@ -3,11 +3,13 @@ import { AuthContext } from "@/providers/Auth.context";
 import { getPosts } from "@/services/forumService"; 
 import { Post } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/router";
 import { useState, useEffect, useContext } from "react";
 
 const STAKE = 10; 
 
 export default function RenderPosts() {
+    const router = useRouter(); 
     const { state } : any = useContext(AuthContext); 
     const [totalCounter, setTotal] = useState<number>(0); 
     const [posts, setPosts] = useState<Post[]>([]);
@@ -68,10 +70,8 @@ export default function RenderPosts() {
                 posts && posts[0] && posts.map((post: Post) => {
                     return <motion.div
                         key={Math.floor(Math.random() * 100000)}
-                        className="w-full bg-slate-900 rounded flex items-center py-5"
-                        initial={{ opacity: 0, y: 50 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -50 }} 
+                        className="w-full bg-slate-900 border border-slate-900 hover:border-violet-500 transition-all rounded flex items-center py-5 select-none"
+                        onClick={() => router.push('/forum/posts/' + post.id)}
                     >
                         <span className="text-gray-600 px-7 text-lg">
                             # { post.id }
