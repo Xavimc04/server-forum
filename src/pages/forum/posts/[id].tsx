@@ -89,6 +89,10 @@ export default function Index({ user }:{ user: SteamProfile }) {
                             </> : <div className='flex items-center justify-center w-full'>
                                 <div className='w-1/2 mt-10'>
                                     <div className='flex items-center justify-end'>
+                                        <div className='flex-1'>
+                                            <span className='material-symbols-outlined cursor-pointer select-none' title='Volver' onClick={() => router.push('/forum')}>arrow_back</span>
+                                        </div>
+
                                         {
                                             state.player && state.player.rank > 0 && <button className="px-5 mr-5 border border-red-500 py-3 rounded-full flex items-center text-red-500 hover:bg-red-500 hover:shadow hover:shadow-red-500 hover:text-slate-950 transition-all">
                                                 <span className="material-symbols-outlined mr-3">star</span>
