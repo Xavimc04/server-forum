@@ -34,6 +34,16 @@ export default function PostModal() {
             return handleError("Para poder seguir deberás introducir un argumento mínimo en el editor."); 
         }
 
+        if(image) {
+            if(Math.floor(image.size / 1024) > 2500) {
+                return handleError("No puedes subir un archivo tan pesado, debe pesar como máximo 2.5MB"); 
+            }
+
+            if(!image.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                return handleError("Solamente se aceptan formatos JPG, PNG, GIF"); 
+            }
+        }
+
         const formData = new FormData();
         formData.append('title', title);
         formData.append('parent', parent);
