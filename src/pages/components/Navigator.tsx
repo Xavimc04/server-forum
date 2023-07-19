@@ -3,6 +3,7 @@ import { AuthContext } from "@/providers/Auth.context"
 import { useContext, useState } from "react"
 import { useRouter } from "next/router";
 import Dropdown from "./Dropdown";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Navigator() {
     const router = useRouter(); 
@@ -40,12 +41,20 @@ export default function Navigator() {
             }
         </div>
 
+        <AnimatePresence>
+            
+        </AnimatePresence> 
         {
-            display && <ul className="flex md:hidden bg-slate-950 flex-col poppins px-5 mt-10 items-center gap-6 select-none pb-10">
+            display && <motion.ul
+                initial={{ opacity: 0, y: "100%" }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: "100%" }}
+                className="flex md:hidden bg-slate-950 flex-col poppins px-5 mt-10 items-center gap-6 select-none pb-10"
+            >
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/')}>Inicio</li>
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Tienda</li>
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/forum')}>Foro</li>
-            </ul>
+            </motion.ul>
         }
     </div>
 }

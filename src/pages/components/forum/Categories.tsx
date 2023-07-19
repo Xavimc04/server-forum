@@ -89,7 +89,6 @@ export default function Categories() {
                 <div>Sin categorías registradas</div>
             )}
 
-
             <ContextMenu display={ contextDisplay } coords={ contextCoords } setDisplay={ handleContextDisplay } categoryId={ selectedId } />
         </div>
     </AnimatePresence>

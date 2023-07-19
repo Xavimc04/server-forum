@@ -11,7 +11,7 @@ export default function PostModal() {
     const [parent, setParent] = useState<string>(''); 
     const [editor, handleEditor] = useState<string>('');
     const [image, handleImage] = useState<File | any>('');
-    const [error, handleError] = useState<string>();
+    const [error, handleError] = useState<string>('');
 
     useEffect(() => {
         defaultValues(); 
@@ -21,7 +21,7 @@ export default function PostModal() {
         handleError(''); 
         setParent(''); 
         handleTitle(''); 
-        handleImage(null); 
+        handleImage(''); 
         handleEditor(''); 
     }
 

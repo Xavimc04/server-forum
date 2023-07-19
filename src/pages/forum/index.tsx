@@ -74,7 +74,6 @@ function reducer(state: typeof initialState, action: { type: string, payload: an
 
 export default function Index({ user }:{ user: SteamProfile }) {    
     const [state, dispatch] = useReducer(reducer, initialState); 
-
     const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
 
     useEffect(() => {

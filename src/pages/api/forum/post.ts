@@ -38,26 +38,42 @@ const readFile = (
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method === 'GET') {
-        const { SKIP_VALUE, CATEGORY, STAKE } : any = req.query; 
+        const { SKIP_VALUE, CATEGORY, STAKE, POST_ID } : any = req.query; 
 
-        const skipValue = parseInt(String(SKIP_VALUE), 10) || 0;
-        const stakeValue = parseInt(String(STAKE), 10) || 0;
-        const categoryValue = parseInt(String(CATEGORY), 10);
+        if(POST_ID) {
+            try {
+                const singlePost = await prisma.post.findFirst({
+                    where: {
+                        id: parseInt(String(POST_ID))
+                    }
+                }); 
 
-        const posts = await prisma.post.findMany({
-            take: stakeValue,
-            skip: skipValue,
-            orderBy: [
-                { pinned: 'desc' },
-                { likes: 'desc' }, 
-                { views: 'desc' }
-            ],
-            ...(categoryValue && { where: { category: categoryValue } })
-        });
-
-        const counter = await prisma.post.count();
-
-        return res.send({ done: true, posts, counter }); 
+                if(!singlePost) return res.send({ done: false, message: "¡Vaya! Parece que el post que estás buscando no existe..." }); 
+    
+                return res.send({ done: true, post: singlePost }); 
+            } catch (error) {
+                return res.send({ done: false, message: "¡Vaya! Parece que el post que estás buscando no existe..." }); 
+            }
+        } else {  
+            const skipValue = parseInt(String(SKIP_VALUE), 10) || 0;
+            const stakeValue = parseInt(String(STAKE), 10) || 0;
+            const categoryValue = parseInt(String(CATEGORY), 10);
+    
+            const posts = await prisma.post.findMany({
+                take: stakeValue,
+                skip: skipValue,
+                orderBy: [
+                    { pinned: 'desc' },
+                    { likes: 'desc' }, 
+                    { views: 'desc' }
+                ],
+                ...(categoryValue && { where: { category: categoryValue } })
+            });
+    
+            const counter = await prisma.post.count();
+    
+            return res.send({ done: true, posts, counter }); 
+        }
     } else {
         try {
             await fs.readdir(path.join(process.cwd() + "/public", "/images"));

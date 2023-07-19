@@ -19,3 +19,13 @@ export async function getPosts(STAKE: number, SKIP_VALUE: number, CATEGORY?: str
         return error;
     }
 }
+
+export async function getSinglePost(POST_ID: string) {
+    try {
+        return await instance.get(`/api/forum/post?POST_ID=${ POST_ID }`).then(response => { 
+            return response.data
+        })
+    } catch (error: any) {
+        return error;
+    }
+}

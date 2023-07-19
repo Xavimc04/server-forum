@@ -13,7 +13,7 @@ export default function RenderPosts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [SKIP_VALUE, setSkipValue] = useState<number>(0); 
 
-    useEffect(() => {
+    useEffect(() => { 
         fetchPosts(state.categoryRoute.length > 0 ? state.categoryRoute[state.categoryRoute.length - 1].id : null, false); 
     }, [SKIP_VALUE]); 
 
@@ -23,6 +23,7 @@ export default function RenderPosts() {
         } else {
             fetchPosts(null, true); 
         }
+
     }, [state.categoryRoute])
 
     const fetchPosts = async (CATEGORY?: number | null, renew?: boolean) => {
@@ -101,6 +102,10 @@ export default function RenderPosts() {
                                 { formatNumber(post.views || 0) } 
                             </span>
                         </div>
+
+                        <div className="mr-10">
+                            Sin comentarios
+                        </div>
                     </motion.div>
                 }) 
             }
@@ -118,21 +123,21 @@ function LoadProfile({ steamId } : { steamId: string }) {
 
     useEffect(() => {
         const getWriterSteam = async () => {
-          handleLoading(true);
-    
-          try {
-            const response = await instance.get(`/api/steam?steamId=${steamId}`);
-    
-            if (response.data.response.players) {
-              if (response.data.response.players[0]) {
-                handleProfile(response.data.response.players[0]);
-              }
+            handleLoading(true);
+        
+            try {
+                const response = await instance.get(`/api/steam?steamId=${steamId}`);
+        
+                if (response.data.response.players) {
+                    if (response.data.response.players[0]) {
+                        handleProfile(response.data.response.players[0]);
+                    }
+                }
+            } catch (error) {
+                return;
             }
-          } catch (error) {
-            return;
-          }
-    
-          handleLoading(false);
+        
+            handleLoading(false);
         };
     
         getWriterSteam();
