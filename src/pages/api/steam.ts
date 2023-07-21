@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const sessionToken = getCookie('session_token', { req, res }); 
 
     if(!sessionToken) {
-        res.send({ error: 'Error al obtener el perfil de Steam' });
+        res.send({ done: false, error: 'Error al obtener el perfil de Steam' });
     }
 
     const playerAccount = await prisma.users.findFirst({
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     if(!playerAccount) {
-        res.send({ error: 'Error al obtener el perfil de Steam' });
+        res.send({ done: false, error: 'Error al obtener el perfil de Steam' });
     }
 
     try {
@@ -29,6 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         res.send(response.data);
     } catch (error) {
-        res.send({ error: 'Error al obtener el perfil de Steam' });
+        res.send({ done: false, error: 'Error al obtener el perfil de Steam' });
     }
 }

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import DiscordLog from "@/lib/discord";
+import { getCookie } from 'cookies-next'; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method == 'GET') {
@@ -8,6 +9,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).send({ categories }); 
     } else if(req.method == 'POST') {
         const { action, name, parent, id } = req.body; 
+
+        if(action === 'CREATEA' || action === 'UPDATE') {
+            const sessionToken = getCookie('session_token', { req, res }); 
+
+            if(!sessionToken) {
+                res.send({ done: false, message: 'Error al obtener el perfil de Steam' });
+            }
+
+            const playerAccount = await prisma.users.findFirst({
+                where: {
+                    session_token: `${ sessionToken }`
+                }
+            })
+
+            if(!playerAccount) {
+                res.send({ done: false, message: 'Error al obtener el perfil de Steam' });
+            } else if(playerAccount.rank == 0) {
+                res.send({ done: false, message: 'No tienes permisos suficientes como para realizar esta acción' });
+            }
+        }
 
         switch (action) {
             case "CREATE":

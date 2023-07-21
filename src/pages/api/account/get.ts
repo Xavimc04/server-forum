@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const sessionToken = getCookie('session_token', { req, res }); 
 
         if(!sessionToken) {
-            res.send({ message: 'Error al obtener el perfil ingame' });
+            res.send({ done: false, message: 'Error al obtener el perfil ingame' });
         }
 
         const userAccount = await prisma.users.findFirst({

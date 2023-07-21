@@ -83,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
             return res.send({ done: true, posts, counter }); 
         }
-    } else {
+    } else if(req.method == 'POST') {
         try {
             await fs.readdir(path.join(process.cwd() + "/public", "/images"));
         } catch (error) {

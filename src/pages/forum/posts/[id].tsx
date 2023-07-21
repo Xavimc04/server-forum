@@ -67,6 +67,22 @@ export default function Index({ user }:{ user: SteamProfile }) {
         fetchData();
     }, [])
 
+    const togglePin = () => {
+        instance.post('/api/forum/pinned', {
+            postAction: 'TOGGLE_PIN', 
+            postId: postContent?.id, 
+            newState: !postContent?.pinned
+        }).then(response => {
+            console.log(response.data); 
+
+            if(response.data.done) {
+                setPostContent(response.data.post); 
+            }
+        }).catch(error => {
+            console.log("Ha aparecido un error: " + error); 
+        })
+    }
+
     return <>
         {
             playerLoaded ? <AuthContext.Provider value={{ user }}>
@@ -94,7 +110,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                         </div>
 
                                         {
-                                            state.player && state.player.rank > 0 && <button className="px-5 mr-5 border border-red-500 py-3 rounded-full flex items-center text-red-500 hover:bg-red-500 hover:shadow hover:shadow-red-500 hover:text-slate-950 transition-all">
+                                            state.player && state.player.rank > 0 && <button onClick={() => togglePin() } className="px-5 mr-5 border border-red-500 py-3 rounded-full flex items-center text-red-500 hover:bg-red-500 hover:shadow hover:shadow-red-500 hover:text-slate-950 transition-all">
                                                 <span className="material-symbols-outlined mr-3">star</span>
 
                                                 { postContent.pinned ? 'Desfijar' : 'Fijar' }
