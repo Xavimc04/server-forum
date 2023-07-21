@@ -84,6 +84,19 @@ export default function Index({ user }:{ user: SteamProfile }) {
         })
     }
 
+    const toggleLike = () => {
+        instance.post('/api/forum/postActions', {
+            postAction: 'LIKE', 
+            postId: postContent?.id
+        }).then(response => {
+            if(response.data.done) {
+                fetchPost();
+            }
+        }).catch(error => {
+            console.log("Ha aparecido un error: " + error); 
+        })
+    }
+
     return <>
         {
             playerLoaded ? <AuthContext.Provider value={{ user }}>
@@ -118,7 +131,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                             </button>
                                         }
 
-                                        <button className="border mr-5 border-yellow-500 p-3 rounded-full flex items-center text-yellow-500 hover:bg-yellow-500 hover:shadow hover:shadow-yellow-500 hover:text-slate-950 transition-all">
+                                        <button onClick={() => toggleLike() } className="border mr-5 border-yellow-500 p-3 rounded-full flex items-center text-yellow-500 hover:bg-yellow-500 hover:shadow hover:shadow-yellow-500 hover:text-slate-950 transition-all">
                                             <span className="material-symbols-outlined">thumb_up</span>
 
                                             {
