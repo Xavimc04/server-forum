@@ -2,22 +2,27 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma"; 
 import { setCookie } from "cookies-next";
 import generateRandomToken from "@/lib/tokenGen";
+import { getCookie } from 'cookies-next'; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method == 'GET') {
-        const { steam } = req.query as { steam: string };
+        const sessionToken = getCookie('session_token', { req, res }); 
 
-        if(!steam) {
-            return res.send({ done: false, message: 'Steam para required...' });
+        if(!sessionToken) {
+            res.send({ message: 'Error al obtener el perfil ingame' });
         }
 
         const userAccount = await prisma.users.findFirst({
             where: {
-                steam: steam || ''
+                session_token: `${ sessionToken }`
             }
         })
+
+        if(!userAccount) {
+            return res.send({ done: false, message: 'No se ha podido encontrar un usuario asignado a esta cuenta de steam.' });
+        }
     
-        return res.status(200).send({ done: true, user: userAccount });
+        return res.send({ done: true, user: userAccount });
     } else if(req.method == 'POST') {
         const { steam } = req.body as { steam: any };
 
