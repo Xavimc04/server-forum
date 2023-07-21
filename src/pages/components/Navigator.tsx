@@ -1,14 +1,27 @@
 import { SteamProfile } from "@/lib/passport";
 import { AuthContext } from "@/providers/Auth.context"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useRouter } from "next/router";
 import Dropdown from "./Dropdown";
 import { AnimatePresence, motion } from "framer-motion";
+import instance from "@/lib/instance";
 
 export default function Navigator() {
     const router = useRouter(); 
     const { user }: SteamProfile | any = useContext(AuthContext); 
-    const [display, handleDisplay] = useState<boolean>(false) 
+    const [display, handleDisplay] = useState<boolean>(false); 
+
+    useEffect(() => {
+        if(user) {
+            instance.post('/api/account/get', {
+                steam: user._json.steamid
+            }).then(response => {
+                if(!response.data.done) {
+                    console.log(response.data.message); 
+                }
+            })
+        }
+    }, [user]);     
 
     return <div className="sticky top-0 w-full z-40">
         <div className="flex items-center justify-between p-5 bg-gradient-to-b from-black to-transparent z-30">

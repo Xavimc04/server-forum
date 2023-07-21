@@ -1,51 +1,52 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model users {
-    identifier  String   @id @db.VarChar(46)
-    steam       String?  @db.VarChar(100)
-    accounts    String?  @db.LongText
-    rank        Int      @default(0)
-    group       String?  @default("user") @db.VarChar(50)
-    inventory   String?  @db.LongText
-    job         String?  @default("unemployed") @db.VarChar(20)
-    job_grade   Int?     @default(0)
-    loadout     String?  @db.LongText
-    metadata    String?  @db.LongText
-    position    String?  @db.LongText
-    firstname   String?  @db.VarChar(16)
-    lastname    String?  @db.VarChar(16)
-    dateofbirth String?  @db.VarChar(10)
-    sex         String?  @db.VarChar(1)
-    height      Int?
-    disabled    Boolean? @default(false)
-    skin        String?  @db.LongText
+  identifier    String   @id @db.VarChar(46)
+  steam         String  @db.VarChar(100)
+  session_token String  @db.LongText
+  accounts      String?  @db.LongText
+  rank          Int      @default(0)
+  group         String?  @default("user") @db.VarChar(50)
+  inventory     String?  @db.LongText
+  job           String?  @default("unemployed") @db.VarChar(20)
+  job_grade     Int?     @default(0)
+  loadout       String?  @db.LongText
+  metadata      String?  @db.LongText
+  position      String?  @db.LongText
+  firstname     String?  @db.VarChar(16)
+  lastname      String?  @db.VarChar(16)
+  dateofbirth   String?  @db.VarChar(10)
+  sex           String?  @db.VarChar(1)
+  height        Int?
+  disabled      Boolean? @default(false)
+  skin          String?  @db.LongText
 }
 
 model ForumCategory {
-    id         Int       @id @default(autoincrement())
-    name       String
-    parentId   Int?
+  id       Int    @id @default(autoincrement())
+  name     String
+  parentId Int?
 
-    @@map(name: "forum_categories")
+  @@map("forum_categories")
 }
 
 model Post {
-    id         Int       @id @default(autoincrement())
-    pinned     Boolean?  @default(false)
-    title      String?
-    category   Int       
-    steam      String
-    views      Int?       @default(0)
-    content    String    @db.Text
-    likes      Int?       @default(0)
-    banner     String?   @db.Text
+  id       Int      @id @default(autoincrement())
+  pinned   Boolean? @default(false)
+  category Int
+  steam    String
+  views    Int?     @default(0)
+  content  String   @db.Text
+  likes    Int?     @default(0)
+  banner   String?  @db.Text
+  title    String?
 
-    @@map(name: "forum_posts")
+  @@map("forum_posts")
 }
