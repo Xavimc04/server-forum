@@ -55,28 +55,29 @@ export default function Index({ user }:{ user: SteamProfile }) {
                 return; 
             }
 
-            const post = await getSinglePost(`${ router.query.id }`); 
-
-            if(post.done) {
-                setPostContent(post.post); 
-            } else handleError(post.message); 
-
+            fetchPost();
             handlePlayerLoaded(true); 
         }
 
         fetchData();
     }, [])
 
+    const fetchPost = async () => {
+        const post = await getSinglePost(`${ router.query.id }`); 
+
+        if(post.done) {
+            setPostContent(post.post); 
+        } else handleError(post.message); 
+    }
+ 
     const togglePin = () => {
-        instance.post('/api/forum/pinned', {
+        instance.post('/api/forum/postActions', {
             postAction: 'TOGGLE_PIN', 
             postId: postContent?.id, 
             newState: !postContent?.pinned
         }).then(response => {
-            console.log(response.data); 
-
             if(response.data.done) {
-                setPostContent(response.data.post); 
+                fetchPost();
             }
         }).catch(error => {
             console.log("Ha aparecido un error: " + error); 
@@ -119,6 +120,14 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
                                         <button className="border mr-5 border-yellow-500 p-3 rounded-full flex items-center text-yellow-500 hover:bg-yellow-500 hover:shadow hover:shadow-yellow-500 hover:text-slate-950 transition-all">
                                             <span className="material-symbols-outlined">thumb_up</span>
+
+                                            {
+                                                state.player.forum_likes.map((like: any) => {
+                                                    if(like.post_id == postContent.id) {
+                                                        return <span key={ like.postId } className='ml-3'>Te gusta</span>
+                                                    }
+                                                })
+                                            } 
                                         </button>
 
                                         <button className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">

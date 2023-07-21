@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const sessionToken = getCookie('session_token', { req, res }); 
 
             if(!sessionToken) {
-                res.send({ done: false, message: 'Error al obtener el perfil de Steam' });
+                return res.send({ done: false, message: 'Error al obtener el perfil de Steam' });
             }
 
             const playerAccount = await prisma.users.findFirst({
@@ -24,9 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             })
 
             if(!playerAccount) {
-                res.send({ done: false, message: 'Error al obtener el perfil de Steam' });
+                return res.send({ done: false, message: 'Error al obtener el perfil de Steam' });
             } else if(playerAccount.rank == 0) {
-                res.send({ done: false, message: 'No tienes permisos suficientes como para realizar esta acción' });
+                return res.send({ done: false, message: 'No tienes permisos suficientes como para realizar esta acción' });
             }
         }
 

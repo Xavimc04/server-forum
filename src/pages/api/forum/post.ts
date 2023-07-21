@@ -45,7 +45,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const singlePost = await prisma.post.findFirst({
                     where: {
                         id: parseInt(String(POST_ID))
-                    }
+                    }, 
+                    include: {
+                        forum_likes: true,
+                    },
                 }); 
 
                 if(!singlePost) return res.send({ done: false, message: "¡Vaya! Parece que el post que estás buscando no existe..." }); 
@@ -76,7 +79,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     { likes: 'desc' }, 
                     { views: 'desc' }
                 ],
-                ...(categoryValue && { where: { category: categoryValue } })
+                ...(categoryValue && { where: { category: categoryValue } }),
+                include: {
+                    forum_likes: true,
+                },
             });
     
             const counter = await prisma.post.count();

@@ -67,7 +67,7 @@ export default function RenderPosts() {
             </div>
 
             {
-                posts && posts[0] && posts.map((post: Post) => {
+                posts && posts[0] && posts.map((post: any) => {
                     return <motion.div
                         key={Math.floor(Math.random() * 100000)}
                         className="w-full bg-slate-900 border border-slate-900 hover:border-violet-500 transition-all rounded flex items-center py-5 select-none"
@@ -75,7 +75,7 @@ export default function RenderPosts() {
                     >
                         <span className="text-gray-600 px-7 text-lg">
                             # { post.id }
-                        </span>
+                        </span> 
 
                         <LoadProfile steamId={ post.steam } />
 
@@ -105,6 +105,12 @@ export default function RenderPosts() {
 
                         <div className="mr-10">
                             Sin comentarios
+                        </div>
+
+                        <div className="mr-10 flex items-center text-yellow-500">
+                            <span className="material-symbols-outlined pr-3">thumb_up</span>
+
+                            { post.forum_likes.length }
                         </div>
                     </motion.div>
                 }) 

@@ -12,7 +12,7 @@ export default function Navigator() {
     const [display, handleDisplay] = useState<boolean>(false); 
 
     useEffect(() => {
-        if(user) {
+        if(user) {  
             instance.post('/api/account/get', {
                 steam: user._json.steamid
             }).then(response => {

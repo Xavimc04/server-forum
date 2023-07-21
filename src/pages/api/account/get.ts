@@ -9,20 +9,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const sessionToken = getCookie('session_token', { req, res }); 
 
         if(!sessionToken) {
-            res.send({ done: false, message: 'Error al obtener el perfil ingame' });
+            return res.send({ done: false, message: 'Error al obtener el perfil ingame' });
         }
 
-        const userAccount = await prisma.users.findFirst({
+        const userMain = await prisma.users.findFirst({
             where: {
                 session_token: `${ sessionToken }`
-            }
-        })
+            },
+        }); 
 
-        if(!userAccount) {
+        if(!userMain) {
             return res.send({ done: false, message: 'No se ha podido encontrar un usuario asignado a esta cuenta de steam.' });
         }
+
+        const userWithLikes = await prisma.users.findFirst({
+            where: {
+                id: userMain.id
+            },
+            include: {
+                forum_likes: {
+                    where: {
+                        user_id: { equals: userMain.id },
+                    },
+                    select: {
+                        post_id: true,
+                    },
+                },
+            },
+        })
     
-        return res.send({ done: true, user: userAccount });
+        return res.send({ done: true, user: userWithLikes });
     } else if(req.method == 'POST') {
         const { steam } = req.body as { steam: any };
 
@@ -44,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await prisma.users.update({
             where: {
-                identifier: userAccount.identifier
+                id: userAccount.id
             }, 
             data: {
                 session_token: newToken
