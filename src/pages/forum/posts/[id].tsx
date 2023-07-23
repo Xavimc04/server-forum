@@ -101,7 +101,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
         {
             playerLoaded ? <AuthContext.Provider value={{ user }}>
                 <Layout>
-                    <main className="flex flex-wrap mt-10 mb-10 bg-slate-950 h-full">  
+                    <main className="flex flex-wrap mt-10 mb-10 bg-slate-950 h-auto">  
                         {
                             error || !postContent ? <>
                                 <div className='w-full mx-10 mt-10 bg-slate-900 rounded text-center py-4' style={{
@@ -162,7 +162,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                     />
 
                                     {
-                                        postContent.banner && <div className='mt-7'>
+                                        postContent.banner && <div className='mt-7 mb-10'>
                                             <button 
                                                 onClick={() => handleDisplayImage(true)}
                                                 className='bg-violet-500 text-slate-950 px-10 py-3 rounded flex items-center'

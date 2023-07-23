@@ -9,7 +9,7 @@ export default function Document() {
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons" /> 
             </Head>
 
-            <body>
+            <body className='bg-slate-950'>
                 <Main />
                 <NextScript />
             </body>
