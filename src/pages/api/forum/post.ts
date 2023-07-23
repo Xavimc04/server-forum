@@ -76,7 +76,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 skip: skipValue,
                 orderBy: [
                     { pinned: 'desc' },
-                    { likes: 'desc' }, 
                     { views: 'desc' }
                 ],
                 ...(categoryValue && { where: { category: categoryValue } }),

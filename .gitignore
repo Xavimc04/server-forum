@@ -13,7 +13,7 @@ public/images/
 /.next/
 /out/
 
-.env
+.env*
 
 # production
 /build
