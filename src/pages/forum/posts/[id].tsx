@@ -12,6 +12,7 @@ import { getSinglePost } from '@/services/forumService';
 import { Post } from '@prisma/client'; 
 import { AnimatePresence } from 'framer-motion';
 import instance from '@/lib/instance';
+import CommentModal from '@/pages/components/forum/CommentModal';
 
 const initialState = {
     player: null
@@ -177,6 +178,8 @@ export default function Index({ user }:{ user: SteamProfile }) {
                             </div>
                         }
                     </main>  
+                    
+                    <CommentModal />
                 </Layout>
 
                 <AnimatePresence>
@@ -185,18 +188,21 @@ export default function Index({ user }:{ user: SteamProfile }) {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}    
-                            className='absolute top-0 w-screen h-screen flex items-center justify-center' 
+                            className='absolute flex items-center justify-center' 
                             style={{
                                 zIndex: 5, 
                                 backgroundColor: 'rgba(0,0,0,.5)', 
-                                backdropFilter: 'blur(3px)'
+                                backdropFilter: 'blur(3px)', 
+                                height: '100vh',
+                                width: '100%',
+                                top: 0
                             }}
                             onClick={() => handleDisplayImage(false)}
                         >
-                            <img className='absolute' src={ `/images/${ postContent.banner }` } alt='Imagen adjunta' />
+                            <img className='max-w-[70%] max-h-[70%]' src={ `/images/${ postContent.banner }` } alt='Imagen adjunta' />
                         </motion.div>
                     }
-                </AnimatePresence>
+                </AnimatePresence> 
             </AuthContext.Provider> : <Spinner />
         }
     </>   

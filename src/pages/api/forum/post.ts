@@ -48,6 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }, 
                     include: {
                         forum_likes: true,
+                        forum_comments: true,
                     },
                 }); 
 
@@ -81,6 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 ...(categoryValue && { where: { category: categoryValue } }),
                 include: {
                     forum_likes: true,
+                    forum_comments: true,
                 },
             });
     

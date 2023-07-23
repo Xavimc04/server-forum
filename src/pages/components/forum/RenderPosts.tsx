@@ -103,8 +103,8 @@ export default function RenderPosts() {
                             </span>
                         </div>
 
-                        <div className="mr-10">
-                            Sin comentarios
+                        <div className="mr-10"> 
+                            { post.forum_comments.length == 0 ? 'Sin comentarios' : `${ post.forum_comments.length } comentario${ post.forum_comments.length > 1 ? 's' : '' }` }
                         </div>
 
                         <div className="mr-10 flex items-center text-yellow-500">
