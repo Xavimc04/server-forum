@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else if(req.method == 'POST') {
         const { action, name, parent, id } = req.body; 
 
-        if(action === 'CREATEA' || action === 'UPDATE') {
+        if(action === 'CREATE' || action === 'UPDATE') {
             const sessionToken = getCookie('session_token', { req, res }); 
 
             if(!sessionToken) {

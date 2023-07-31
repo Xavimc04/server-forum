@@ -9,13 +9,15 @@ import { motion } from 'framer-motion'
 import Layout from '@/pages/layout';
 import { getUser } from '@/services/userService';
 import { getSinglePost } from '@/services/forumService';
-import { Post } from '@prisma/client'; 
+import { Post, forum_comments } from '@prisma/client'; 
 import { AnimatePresence } from 'framer-motion';
 import instance from '@/lib/instance';
 import CommentModal from '@/pages/components/forum/CommentModal';
 
 const initialState = {
-    player: null
+    player: null, 
+    comment: '', 
+    commenting: false
 };
 
 function reducer(state: typeof initialState, action: { type: string, payload: any }) {
@@ -27,6 +29,20 @@ function reducer(state: typeof initialState, action: { type: string, payload: an
             player: payload
         }
     }
+
+    if(type === 'SET_COMMENT') {
+        return {
+            ...state, 
+            comment: payload
+        }
+    }
+
+    if(type === 'SET_COMMENTING') {
+        return {
+            ...state, 
+            commenting: payload
+        }
+    }
     
     return state; 
 } 
@@ -35,7 +51,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
     const router = useRouter(); 
     const [state, dispatch] = useReducer(reducer, initialState); 
     const [playerLoaded, handlePlayerLoaded] = useState<boolean>(false);
-    const [postContent, setPostContent] = useState<Post>(); 
+    const [postContent, setPostContent] = useState<any>();  
     const [error, handleError] = useState<string>(); 
     const [displayImage, handleDisplayImage] = useState<boolean>(false); 
 
@@ -98,9 +114,35 @@ export default function Index({ user }:{ user: SteamProfile }) {
         })
     }
 
+    const postComment = () => {
+        if(state.comment.length == 0) return; 
+
+        instance.post('/api/forum/postActions', {
+            postAction: 'COMMENT', 
+            postId: postContent?.id, 
+            newState: state.comment
+        }).then(response => {
+            if(response.data.done) {
+                fetchPost();
+
+                dispatch({
+                    type: "SET_COMMENTING", 
+                    payload: false
+                })
+
+                dispatch({
+                    type: "SET_COMMENT", 
+                    payload: ""
+                })
+            }
+        }).catch(error => {
+            console.log("Ha aparecido un error: " + error); 
+        })
+    }
+
     return <>
         {
-            playerLoaded ? <AuthContext.Provider value={{ user }}>
+            playerLoaded ? <AuthContext.Provider value={{ user, state, dispatch }}>
                 <Layout>
                     <main className="flex flex-wrap mt-10 mb-10 bg-slate-950 h-auto">  
                         {
@@ -122,7 +164,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                     <div className='flex items-center justify-end'>
                                         <div className='flex-1'>
                                             <span className='material-symbols-outlined cursor-pointer select-none' title='Volver' onClick={() => router.push('/forum')}>arrow_back</span>
-                                        </div>
+                                        </div>  
 
                                         {
                                             state.player && state.player.rank > 0 && <button onClick={() => togglePin() } className="px-5 mr-5 border border-red-500 py-3 rounded-full flex items-center text-red-500 hover:bg-red-500 hover:shadow hover:shadow-red-500 hover:text-slate-950 transition-all">
@@ -144,7 +186,12 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                             } 
                                         </button>
 
-                                        <button className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
+                                        <button onClick={() => {
+                                            dispatch({
+                                                type: "SET_COMMENTING", 
+                                                payload: true
+                                            })
+                                        }} className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
                                             <span className="material-symbols-outlined mr-3">forum</span>
 
                                             Comentar
@@ -174,12 +221,18 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                             </button>
                                         </div>
                                     }
+
+                                    {
+                                        postContent.forum_comments.map((singleComment:forum_comments) => {
+                                            return <div>Holaaa</div>
+                                        })
+                                    }
                                 </div>
                             </div>
                         }
                     </main>  
                     
-                    <CommentModal />
+                    <CommentModal postComment={ postComment } />
                 </Layout>
 
                 <AnimatePresence>
