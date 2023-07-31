@@ -62,8 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.send({ done: true, message: 'Post has been liked/unliked' }); 
     } else if(postAction && postId && postAction == 'COMMENT') {
         await prisma.forum_comments.create({
-            data: {
-                id: postId, 
+            data: { 
                 user_id: playerAccount.id,
                 post_id: parseInt(postId), 
                 content: newState

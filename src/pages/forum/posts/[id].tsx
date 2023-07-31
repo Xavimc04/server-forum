@@ -8,11 +8,12 @@ import { useEffect, useReducer, useState } from 'react';
 import { motion } from 'framer-motion'
 import Layout from '@/pages/layout';
 import { getUser } from '@/services/userService';
-import { getSinglePost } from '@/services/forumService';
-import { Post, forum_comments } from '@prisma/client'; 
+import { getSinglePost } from '@/services/forumService'; 
 import { AnimatePresence } from 'framer-motion';
 import instance from '@/lib/instance';
 import CommentModal from '@/pages/components/forum/CommentModal';
+import moment from 'moment';
+import 'moment/locale/es';
 
 const initialState = {
     player: null, 
@@ -164,7 +165,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                     <div className='flex items-center justify-end'>
                                         <div className='flex-1'>
                                             <span className='material-symbols-outlined cursor-pointer select-none' title='Volver' onClick={() => router.push('/forum')}>arrow_back</span>
-                                        </div>  
+                                        </div>   
 
                                         {
                                             state.player && state.player.rank > 0 && <button onClick={() => togglePin() } className="px-5 mr-5 border border-red-500 py-3 rounded-full flex items-center text-red-500 hover:bg-red-500 hover:shadow hover:shadow-red-500 hover:text-slate-950 transition-all">
@@ -174,28 +175,32 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                             </button>
                                         }
 
-                                        <button onClick={() => toggleLike() } className="border mr-5 border-yellow-500 p-3 rounded-full flex items-center text-yellow-500 hover:bg-yellow-500 hover:shadow hover:shadow-yellow-500 hover:text-slate-950 transition-all">
-                                            <span className="material-symbols-outlined">thumb_up</span>
+                                        {
+                                            state.player && <button onClick={() => toggleLike() } className="border mr-5 border-yellow-500 p-3 rounded-full flex items-center text-yellow-500 hover:bg-yellow-500 hover:shadow hover:shadow-yellow-500 hover:text-slate-950 transition-all">
+                                                <span className="material-symbols-outlined">thumb_up</span>
 
-                                            {
-                                                state.player.forum_likes.map((like: any) => {
-                                                    if(like.post_id == postContent.id) {
-                                                        return <span key={ like.postId } className='ml-3'>Te gusta</span>
-                                                    }
+                                                {
+                                                    state.player && state.player.forum_likes.map((like: any) => {
+                                                        if(like.post_id == postContent.id) {
+                                                            return <span key={ like.postId } className='ml-3'>Te gusta</span>
+                                                        }
+                                                    })
+                                                } 
+                                            </button>
+                                        } 
+
+                                        {
+                                            state.player && <button onClick={() => {
+                                                dispatch({
+                                                    type: "SET_COMMENTING", 
+                                                    payload: true
                                                 })
-                                            } 
-                                        </button>
-
-                                        <button onClick={() => {
-                                            dispatch({
-                                                type: "SET_COMMENTING", 
-                                                payload: true
-                                            })
-                                        }} className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
-                                            <span className="material-symbols-outlined mr-3">forum</span>
-
-                                            Comentar
-                                        </button>
+                                            }} className="px-5 border border-green-500 py-3 rounded-full flex items-center text-green-500 hover:bg-green-500 hover:shadow hover:shadow-green-500 hover:text-slate-950 transition-all">
+                                                <span className="material-symbols-outlined mr-3">forum</span>
+    
+                                                Comentar
+                                            </button>
+                                        } 
                                     </div>
                                     
                                     <h2 className='font-extrabold text-4xl poppins mt-10 flex items-center'>
@@ -223,8 +228,24 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                     }
 
                                     {
-                                        postContent.forum_comments.map((singleComment:forum_comments) => {
-                                            return <div>Holaaa</div>
+                                        postContent.forum_comments.map((singleComment:any) => {
+                                            return <div className='mt-5 w-full border-t border-slate-900 pt-5'>
+                                                <div className='flex items-start'>
+                                                    <LoadProfile steamId={ singleComment.users.steamId } />
+
+                                                    <span className='flex-1 text-violet-500'>
+                                                        { singleComment.users.firstname + ' ' + singleComment.users.lastname }
+
+                                                        <p className='mt-3 text-white'>
+                                                            { singleComment.content }
+                                                        </p>
+
+                                                        <p className='mt-2 flex-1 text-end text-gray-400'>
+                                                            { moment(singleComment.createdAt).format('LLLL') }
+                                                        </p>
+                                                    </span>
+                                                </div> 
+                                            </div>
                                         })
                                     }
                                 </div>

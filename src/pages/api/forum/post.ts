@@ -48,7 +48,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }, 
                     include: {
                         forum_likes: true,
-                        forum_comments: true,
+                        forum_comments: {
+                            include: {
+                                users: {
+                                    select: {
+                                        firstname: true, 
+                                        lastname: true, 
+                                        steam: true
+                                    }
+                                }
+                            }
+                        },
                     },
                 }); 
 
