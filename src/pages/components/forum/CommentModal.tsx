@@ -12,7 +12,7 @@ export default function CommentModal({ postComment } : { postComment: () => void
                     initial={{ opacity: 0, y: "100%" }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: "100%" }}
-                    className="absolute bottom-0 bg-slate-900 text-white w-[90%] xl:w-[40%] p-5 rounded-t-lg pb-10" 
+                    className="fixed bottom-0 bg-slate-900 text-white w-[90%] xl:w-[40%] p-5 rounded-t-lg pb-10" 
                     style={{
                         boxShadow: '0px 0px 70px #020617'
                     }}
