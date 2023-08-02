@@ -40,6 +40,15 @@ input:focus {
     padding: 10px 10px; 
 }
 
+*::-webkit-scrollbar {
+    display: none;
+}
+  
+* {
+    -ms-overflow-style: none;
+    scrollbar-width: none;  
+}
+
 @font-face {
 	font-family: poppins;
 	src: url('./fonts/poppins.ttf');

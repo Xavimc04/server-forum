@@ -135,7 +135,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
                         <Categories />
 
-                        <div className="flex-1 rounded-lg mr-5">
+                        <div className="flex-1 flex items-center justify-center w-[90%] lg:w-full rounded-lg mr-0 lg:mr-5">
                             <RenderPosts />
                         </div>
                     </main>

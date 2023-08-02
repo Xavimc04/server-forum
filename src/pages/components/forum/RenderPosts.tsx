@@ -61,7 +61,7 @@ export default function RenderPosts() {
     };
 
     return <AnimatePresence>
-        <div className="w-full flex flex-col gap-3">
+        <div className="w-[90%] lg:w-full flex flex-col gap-3">
             <div className="w-full text-end text-gray-400">
                 Mostrando { posts.length } de { totalCounter } resultados...
             </div>
@@ -70,7 +70,7 @@ export default function RenderPosts() {
                 posts && posts[0] && posts.map((post: any) => {
                     return <motion.div
                         key={Math.floor(Math.random() * 100000)}
-                        className="w-full bg-slate-900 border border-slate-900 hover:border-violet-500 transition-all rounded flex items-center py-5 select-none"
+                        className="w-full bg-slate-900 border border-slate-900 hover:border-violet-500 transition-all rounded flex flex-wrap items-center py-5 select-none"
                         onClick={() => router.push('/forum/posts/' + post.id)}
                     >
                         <span className="text-gray-600 px-7 text-lg">
@@ -103,7 +103,7 @@ export default function RenderPosts() {
                             </span>
                         </div>
 
-                        <div className="mr-10"> 
+                        <div className="mr-0 lg:mr-10"> 
                             { post.forum_comments.length == 0 ? 'Sin comentarios' : `${ post.forum_comments.length } comentario${ post.forum_comments.length > 1 ? 's' : '' }` }
                         </div>
 

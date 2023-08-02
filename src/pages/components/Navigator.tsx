@@ -32,7 +32,7 @@ export default function Navigator() {
 
                 <ul className="flex poppins items-center gap-6 ml-10 select-none">
                     <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/')}>Inicio</li>
-                    <li className="cursor-pointer transition-all hover:text-violet-500">Tienda</li>
+                    <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/shop')}>Tienda</li>
                     <li className="cursor-pointer transition-all hover:text-violet-500" onClick={() => router.push('/forum')}>Foro</li> 
                 </ul>
             </div>
@@ -54,9 +54,6 @@ export default function Navigator() {
             }
         </div>
 
-        <AnimatePresence>
-            
-        </AnimatePresence> 
         {
             display && <motion.ul
                 initial={{ opacity: 0, y: "100%" }}
@@ -65,7 +62,7 @@ export default function Navigator() {
                 className="flex md:hidden bg-slate-950 flex-col poppins px-5 mt-10 items-center gap-6 select-none pb-10"
             >
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/')}>Inicio</li>
-                <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500">Tienda</li>
+                <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/shop')}>Tienda</li>
                 <li className="cursor-pointer bg-slate-900 w-full text-center py-2.5 rounded transition-all hover:bg-violet-500" onClick={() => router.push('/forum')}>Foro</li>
             </motion.ul>
         }
