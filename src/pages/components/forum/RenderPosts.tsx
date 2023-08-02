@@ -17,7 +17,7 @@ export default function RenderPosts() {
 
     useEffect(() => { 
         fetchPosts(state.categoryRoute.length > 0 ? state.categoryRoute[state.categoryRoute.length - 1].id : null, false); 
-    }, [SKIP_VALUE]); 
+    }, [SKIP_VALUE]);  
 
     useEffect(() => {
         if(state.categoryRoute.length > 0) {

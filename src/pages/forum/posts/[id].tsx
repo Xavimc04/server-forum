@@ -234,15 +234,11 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                                     <LoadProfile steamId={ singleComment.users.steamId } />
 
                                                     <span className='flex-1 text-violet-500'>
-                                                        { singleComment.users.firstname + ' ' + singleComment.users.lastname }
+                                                        { singleComment.users.firstname + ' ' + singleComment.users.lastname }, <span className=' text-gray-400'>{ moment(singleComment.createdAt).format('LLLL') }</span>
 
                                                         <p className='mt-3 text-white'>
                                                             { singleComment.content }
-                                                        </p>
-
-                                                        <p className='mt-2 flex-1 text-end text-gray-400'>
-                                                            { moment(singleComment.createdAt).format('LLLL') }
-                                                        </p>
+                                                        </p> 
                                                     </span>
                                                 </div> 
                                             </div>
