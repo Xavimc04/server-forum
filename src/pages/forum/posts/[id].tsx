@@ -161,7 +161,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                     zIndex: '0'
                                 }} src='https://www.pngkey.com/png/full/189-1899415_bauer-gta-v-character-png.png' />
                             </> : <div className='flex items-center justify-center w-full'>
-                                <div className='w-1/2 mt-10'>
+                                <div className='w-[90%] xl:w-1/2 mt-10'>
                                     <div className='flex items-center justify-end'>
                                         <div className='flex-1'>
                                             <span className='material-symbols-outlined cursor-pointer select-none' title='Volver' onClick={() => router.push('/forum')}>arrow_back</span>
@@ -229,7 +229,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
 
                                     {
                                         postContent.forum_comments.map((singleComment:any) => {
-                                            return <div className='mt-5 w-full border-t border-slate-900 pt-5'>
+                                            return <div key={ singleComment.id } className='mt-5 w-full border-t border-slate-900 pt-5'>
                                                 <div className='flex items-start'>
                                                     <LoadProfile steamId={ singleComment.users.steamId } />
 
@@ -262,7 +262,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}    
-                            className='absolute flex items-center justify-center' 
+                            className='fixed flex items-center justify-center' 
                             style={{
                                 zIndex: 5, 
                                 backgroundColor: 'rgba(0,0,0,.5)', 
