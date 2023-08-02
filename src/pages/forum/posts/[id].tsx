@@ -162,13 +162,13 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                 }} src='https://www.pngkey.com/png/full/189-1899415_bauer-gta-v-character-png.png' />
                             </> : <div className='flex items-center justify-center w-full'>
                                 <div className='w-[90%] xl:w-1/2 mt-10'>
-                                    <div className='flex items-center justify-end'>
+                                    <div className='flex items-center justify-end flex-wrap gap-5'>
                                         <div className='flex-1'>
                                             <span className='material-symbols-outlined cursor-pointer select-none' title='Volver' onClick={() => router.push('/forum')}>arrow_back</span>
                                         </div>   
 
                                         {
-                                            state.player && state.player.rank > 0 && <button onClick={() => togglePin() } className="px-5 mr-5 border border-red-500 py-3 rounded-full flex items-center text-red-500 hover:bg-red-500 hover:shadow hover:shadow-red-500 hover:text-slate-950 transition-all">
+                                            state.player && state.player.rank > 0 && <button onClick={() => togglePin() } className="px-5 border border-red-500 py-3 rounded-full flex items-center text-red-500 hover:bg-red-500 hover:shadow hover:shadow-red-500 hover:text-slate-950 transition-all">
                                                 <span className="material-symbols-outlined mr-3">star</span>
 
                                                 { postContent.pinned ? 'Desfijar' : 'Fijar' }
@@ -176,7 +176,7 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                         }
 
                                         {
-                                            state.player && <button onClick={() => toggleLike() } className="border mr-5 border-yellow-500 p-3 rounded-full flex items-center text-yellow-500 hover:bg-yellow-500 hover:shadow hover:shadow-yellow-500 hover:text-slate-950 transition-all">
+                                            state.player && <button onClick={() => toggleLike() } className="border border-yellow-500 p-3 rounded-full flex items-center text-yellow-500 hover:bg-yellow-500 hover:shadow hover:shadow-yellow-500 hover:text-slate-950 transition-all">
                                                 <span className="material-symbols-outlined">thumb_up</span>
 
                                                 {
