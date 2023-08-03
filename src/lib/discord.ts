@@ -29,4 +29,4 @@ export default async function DiscordLog({
     } catch (error) {
         return false;
     }
-}
+} 
