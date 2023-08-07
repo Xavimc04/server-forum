@@ -10,13 +10,14 @@ import Spinner from "../components/Spinner";
 import { useReducer } from "react"; 
 import ElementModal from "../components/shop/ElementModal";
 import instance from "@/lib/instance";
-import { forum_store_items } from "@prisma/client";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { forum_store_items } from "@prisma/client"; 
+import ConfirmationModal from "../components/shop/ConfirmationPopup";
   
 const initialState = {
     player: null, 
     creating: false, 
-    elements: []
+    elements: [], 
+    selected: null
 };
 
 function reducer(state: typeof initialState, action: { type: string, payload: any }) {
@@ -40,6 +41,13 @@ function reducer(state: typeof initialState, action: { type: string, payload: an
         return {
             ...state, 
             elements: payload
+        }
+    } 
+
+    if(type === 'SET_SELECTED_ITEM') {
+        return {
+            ...state, 
+            selected: payload
         }
     } 
     
@@ -120,61 +128,19 @@ export default function Index({ user }:{ user: SteamProfile }) {
                                         }
 
                                         <div className="w-full px-5">
-                                            <button className="bg-indigo-500 w-full hover:bg-indigo-700 transition-all rounded p-2.5 mb-5 poppins">Comprar</button>
+                                            <button onClick={() => dispatch({
+                                                type: "SET_SELECTED_ITEM", 
+                                                payload: element
+                                            })} className="bg-indigo-500 w-full hover:bg-indigo-700 transition-all rounded p-2.5 mb-5 poppins">Comprar</button> 
                                         </div>
                                     </div>
                                 })
                             }
                         </div>
-
-                        <PayPalScriptProvider
-                            options={{
-                                clientId: "ASY_slC7eqDcO725bpdZeoyGkY5XKNyIY0rX8mCeP57hPgx7YuyLGkZYgzaXe3STm9W-PysXEBS3zoK6"
-                            }}
-                        >
-                            <PayPalButtons
-                                createOrder={ async () => {
-                                    try { 
-                                        const response:any = await instance.post('/api/paypal/order', {
-                                            price: 2, 
-                                            storeItem: 2
-                                        }); 
-
-                                        if (response.data && response.data.id) {
-                                            return response.data.id;
-                                        } else {
-                                            throw new Error("Order ID not found in response");
-                                        } 
-                                    } catch (error) { 
-                                        throw new Error("Error creating PayPal order");
-                                    } 
-                                }} 
-
-                                onApprove={async (data, actions:any) => {  
-                                    return actions.order.capture().then(function(details:any) {
-                                        console.log("Confirmar el pago")
-                                        // instance.post(`${API_ROUTE}/payments/paypal/confirm`, {
-                                        //     id: details.id, 
-                                        //     steam: auth
-                                        // }).then(response => {
-                                        //     if(!response.data.done) return console.log(response.data.message); 
-
-                                        //     getUserCoins(); 
-                                        //     handleBuy(0); 
-                                        // }).catch(error => console.log(error));  
-                                    });
-                                }}
-
-                                style={{ 
-                                    layout: "horizontal", 
-                                    color: 'black', 
-                                    tagline: false,
-                                }} 
-                            />
-                        </PayPalScriptProvider>
                     </main> 
 
                     <ElementModal />
+                    <ConfirmationModal />
                 </Layout>
             </AuthContext.Provider> : <Spinner />
         }

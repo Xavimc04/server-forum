@@ -61,5 +61,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }) 
 
         return res.json({ id: response.result.id });
+    } else if(req.method === 'PUT') {
+        const { paymentId, status } = req.body;
+
+        if(!paymentId || !status) return res.send({
+            done: false,
+            message: "No se ha encontrado un precio sobre la orden solicitada"
+        }); 
+        
+        const doesPaymentExist = await prisma.forum_payments.findFirst({
+            where: {
+                orderId: {
+                    equals: paymentId
+                }
+            }
+        });
+
+        if(doesPaymentExist && doesPaymentExist.orderId) {
+            const updated = await prisma.forum_payments.update({
+                where: {
+                    id: doesPaymentExist.id
+                },
+                data: {
+                    status: status
+                }
+            });
+
+            if(updated) {
+                return res.send({
+                    done: true, 
+                    message: "Pago actualizado correctamente"
+                })
+            }
+        }
+
+        return res.send({
+            done: false, 
+            message: "¡Vaya! ha ocurrido un problema cuando se procesaba el pago."
+        })
     }
 }
