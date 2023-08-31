@@ -3,6 +3,49 @@ import { AuthContext } from "@/providers/Auth.context";
 import { AnimatePresence, motion } from "framer-motion"; 
 import { useContext, useEffect, useState } from "react";
 
+interface IDonationElement {
+    label: string, 
+    category: string, 
+    element?: string,
+    input: string 
+}
+
+const DonationElements = [
+    {
+        label: "Efectivo", 
+        category: "accounts", 
+        element: "money", 
+        input: "number"
+    }, 
+    {
+        label: "Banco", 
+        category: "accounts", 
+        element: "bank", 
+        input: "number"
+    },
+    {
+        label: "Dinero negro", 
+        category: "accounts", 
+        element: "black_money", 
+        input: "number"
+    }, 
+    {
+        label: "Item", 
+        category: "items",  
+        input: "text"
+    }, 
+    {
+        label: "Arma", 
+        category: "weapons",  
+        input: "text"
+    },
+    {
+        label: "Vehículo", 
+        category: "vehicles",  
+        input: "text" 
+    }
+]; 
+
 export default function ElementModal() {
     const { state, dispatch } : any = useContext(AuthContext);  
     const [error, handleError] = useState<string>('');
@@ -10,6 +53,9 @@ export default function ElementModal() {
     const [description, setDescription] = useState<string>(''); 
     const [image, setImage] = useState<any>("");
     const [price, setPrice] = useState<number>(0);
+    const [element, setElement] = useState<number>(); 
+    const [elementInput, handleElementInput] = useState<string | number>(); 
+    const [donationElements, setDonationElements] = useState<any>([]); 
 
     useEffect(() => {
         setName(""); 
@@ -25,9 +71,11 @@ export default function ElementModal() {
         formData.append('name', name);
         formData.append('description', description);
         formData.append('image', image);
+        formData.append('articles', JSON.stringify(donationElements));
         formData.append('price', `${ price }`);
 
         instance.post('/api/shop/manage', formData).then(response => { 
+            console.log(response.data);
             if(!response.data.done) return handleError(response.data.message); 
 
             dispatch({
@@ -86,7 +134,91 @@ export default function ElementModal() {
                             className="bg-slate-950 ml-0 md:ml-5 py-2 rounded px-4 mt-5 md:mt-0 w-full md:w-auto" 
                         />
 
-                        <textarea placeholder="Descripción del producto" value={ description } onChange={(e) => setDescription(e.target.value)} className="w-full mt-5 bg-slate-950 rounded py-4 px-4 min-h-[150px]" />
+                        <textarea maxLength={ 400 } placeholder="Descripción del producto" value={ description } onChange={(e) => setDescription(e.target.value)} className="w-full mt-5 bg-slate-950 rounded py-4 px-4 min-h-[150px]" />
+                    </div>
+
+                    <div className="flex gap-3 mt-5">
+                        {
+                            donationElements.map((categoryData:any, index:number) => {
+                                if (typeof categoryData === 'object' && categoryData !== null) {
+                                    const category = Object.keys(categoryData)[0];
+                                    const elements = categoryData[category];
+
+                                    return (
+                                        <div key={ index }>
+                                            <ul className="flex flex-row gap-3">
+                                                {
+                                                    elements && typeof elements === 'object' ? Object.keys(elements).map((elementName, elementIndex) => (
+                                                        <li className="bg-slate-950 py-1 px-3 rounded select-none cursor-pointer" key={ elementIndex }>
+                                                            { elementName }
+                                                        </li>
+                                                    )) : null
+                                                }
+                                            </ul>
+                                        </div>
+                                    );
+                                }
+                                
+                                return null; 
+                            })
+                        }
+                    </div>
+
+                    <div className="w-full mt-5 flex items-center flex-wrap">   
+                        <select value={ element } onChange={(e) => setElement(parseInt(e.target.value ? e.target.value : '-1'))} className="bg-slate-950 w-full rounded py-2.5 flex-1 px-4">
+                            <option value=""></option>
+
+                            {
+                                DonationElements.map((element:IDonationElement, index:number) => {
+                                    return <option key={ index } value={ index }>{ element.label }</option>
+                                })
+                            }
+                        </select>
+
+                        {
+                            element != null && element >= 0 && <motion.div 
+                                initial={{ opacity: 0, y: "100%" }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: "100%" }}
+                                className="flex items-center"
+                            >
+                                <input 
+                                    type={ DonationElements[element].input } 
+                                    value={ elementInput }
+                                    onChange={(e) => handleElementInput(e.target.value)}
+                                    className="bg-slate-950 w-full rounded py-2 flex-1 px-4 ml-5" 
+                                    placeholder={ DonationElements[element].input == 'text' ? 'Artículo' : 'Cantidad' }
+                                />
+
+                                <button className="bg-slate-800 py-2 ml-5 px-10 rounded transition-all" onClick={() => { 
+                                    if(!element || !elementInput) {
+                                        return handleError("Por favor, rellena todos los campos antes de crear un elemento.")
+                                    } 
+
+                                    const updatedDonationElements = [...donationElements];
+
+                                    if (!updatedDonationElements[element] || !updatedDonationElements[element][DonationElements[element].category]) {
+                                        updatedDonationElements[element] = {
+                                            [DonationElements[element].category]: {}
+                                        };
+                                    }
+
+                                    if (DonationElements[element].category === 'items') {
+                                        updatedDonationElements[element][DonationElements[element].category][elementInput] = 1;
+                                    } else if (DonationElements[element].category === 'weapons') {
+                                        updatedDonationElements[element][DonationElements[element].category][elementInput] = 1000;
+                                    } else if (DonationElements[element].category === 'vehicles') {
+                                        updatedDonationElements[element][DonationElements[element].category][elementInput] = true;
+                                    } else {
+                                        updatedDonationElements[element][DonationElements[element].category][`${ DonationElements[element].element }`] = elementInput;
+                                    }
+
+                                    setDonationElements(updatedDonationElements);
+                                    handleElementInput("");
+                                }}>Añadir</button>
+                            </motion.div>
+                        }
+
                     </div>
 
                     {

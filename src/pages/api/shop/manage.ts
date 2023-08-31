@@ -79,7 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
         }
 
-        const { name, description, price } = fields;
+        const { name, description, price, articles } = fields;
         const image: any = files.image; 
         
         if(!name || !description || !price) return res.send({
@@ -91,7 +91,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             name: name[0], 
             description: description[0],
             price: parseInt(price[0]),
-            image: ''
+            image: '', 
+            articles: articles && articles[0] ? articles[0] : ""
         } 
         
         if (image && image[0] && image[0].newFilename) {

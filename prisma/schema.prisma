@@ -88,6 +88,7 @@ model forum_store_items {
   id             Int              @id @default(autoincrement())
   name           String?          @db.VarChar(80)
   description    String?          @db.LongText
+  articles       String?          @db.LongText
   price          Int?             @default(1)
   image          String?          @db.LongText
   forum_payments forum_payments[]
